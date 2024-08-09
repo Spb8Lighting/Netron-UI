@@ -1,0 +1,327 @@
+a:has(#logo) {
+  width: 230px;
+  transition: width .35s ease
+}
+
+.compact a:has(#logo) {
+  width: 70px;
+}
+
+#logo {
+  margin: 10px;
+  width: 210px;
+  display: block;
+  box-sizing: border-box;
+  aspect-ratio: 8.5;
+  mask-image: url('../img/netron.svg');
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  background-color: var(--bs-body-color);
+  transition: all .35s ease;
+}
+
+#menuToggle i {
+  font-size: 2rem;
+}
+
+.compact #logo {
+  width: 50px;
+  margin-top: 16px;
+}
+
+body>nav {
+  height: 3rem;
+}
+
+body>div,
+#main-menu {
+  height: calc(100vh - 3rem) !important;
+}
+
+#pageContent {
+  height: calc(100vh - 3rem - 0.5rem) !important;
+}
+
+.img-fix-150 {
+  width: 150px !important;
+  margin: .25rem;
+  padding: 0;
+}
+
+/* Form */
+#page-content>form:last-child {
+  margin-bottom: 0!important;
+}
+
+/* Alerts */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn.fade::before {
+  font-family: var(--fa-style-family, 'Font Awesome 6 Free');
+  font-weight: var(--fa-style, 900);
+  float: left;
+  margin-right: .75rem;
+}
+
+.btn-success::before {
+  content: '\f058';
+}
+
+.btn-danger::before {
+  content: '\f06a';
+}
+
+.btn-warning::before {
+  content: '\f071';
+}
+
+/* Netron table */
+.netron-table {
+  width: 150px;
+  height: 150px;
+  margin: .25rem;
+  padding: .25rem;
+  background-color: black;
+  color: white;
+  border-radius: .25rem;
+}
+
+.netron-table table.table {
+  --bs-table-color: white;
+  --bs-table-border-color: white;
+  --bs-table-bg: black;
+}
+
+.netron-table th,
+.netron-table td {
+  width: calc(150px / 4);
+}
+
+/* Main menu (left bar) */
+
+#main-menu {
+  width: 230px !important;
+  transition: width .35s ease;
+  user-select: none;
+}
+
+#main-menu a,
+#pageContent a {
+  color: var(--bs-body-color) !important;
+  text-decoration: none !important;
+}
+
+:not(.compact) #main-menu i {
+  margin-right: 10px;
+}
+
+#main-menu ul {
+  padding: 0;
+}
+
+#main-menu>ul.nav {
+  flex-wrap: nowrap;
+}
+
+#main-menu li {
+  list-style-type: none;
+  position: relative;
+  width: 100%;
+}
+
+#main-menu ul ul>li {
+  padding-left: 36px;
+}
+
+html:not(.compact) #main-menu ul ul>li a::after {
+  border-left: 1px solid #2A3F54;
+  bottom: 0;
+  content: '';
+  left: 26px;
+  position: absolute;
+  top: 0;
+}
+
+#main-menu ul ul>li:last-child a::after {
+  bottom: 17px !important;
+}
+
+html:not(.compact) #main-menu ul ul>li a::before {
+  background-color: #2A3F54;
+  bottom: auto;
+  content: '';
+  height: 8px;
+  left: 22.5px;
+  margin-top: 9px;
+  position: absolute;
+  right: auto;
+  width: 8px;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.nav-item {
+  z-index: 1;
+}
+
+hr {
+  z-index: -1;
+}
+
+#main-menu a.active,
+#main-menu>ul.nav>li:last-child,
+.compact #main-menu ul ul>li {
+  text-shadow: rgba(0, 0, 0, .25) 0 -1px 0;
+  background: linear-gradient(#334556, #2C4257), #2A3F54;
+  color: var(--bs-white) !important;
+}
+
+#main-menu ul ul>li:hover,
+#main-menu ul>li>ul>li.active,
+#main-menu #menu>ul>li>a:hover {
+  background-color: var(--bs-body-bg);
+}
+
+#main-menu ul.nav li:last-child .form-check-input:checked {
+  background-color: var(--bs-danger);
+  border-color: var(--bs-danger);
+}
+
+#main-menu ul.nav li:last-child:has(.form-check-input:checked) {
+  background: none;
+  --bs-bg-opacity: 1;
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+  background-image: var(--bs-gradient) !important;
+  background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+}
+
+/* Compact Menu */
+html:not(.compact) #main-menu li:has(ul)>a::after {
+  content: '\f078';
+  font-family: var(--fa-style-family, 'Font Awesome 6 Free');
+  font-weight: var(--fa-style, 900);
+  float: right;
+}
+
+.no-transition {
+  transition: none !important;
+  animation: none !important;
+}
+
+.compact #main-menu {
+  width: 70px !important;
+}
+
+.compact #main-menu a i {
+  display: block;
+  width: 100%;
+  font-size: 2em;
+  margin-bottom: .25em;
+}
+
+.compact #main-menu a {
+  margin: 0;
+  padding: 0.5em 0;
+  text-align: center;
+  font-size: .7em;
+}
+
+.compact #main-menu ul>li:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+.compact #main-menu>ul.nav>li:last-child div:first-child,
+.compact #main-menu>ul.nav>li:last-child div span:first-child,
+.compact ul.nav>li:last-child label {
+  display: none !important;
+}
+
+.compact #main-menu ul ul {
+  position: absolute;
+  left: 100%;
+  top: 0
+}
+
+.compact #main-menu ul ul>li {
+  width: 210px;
+  padding: .25em;
+  margin-bottom: 0 !important;
+}
+
+.compact #main-menu ul ul>li {
+  background: #2A3F54;
+}
+
+.compact #main-menu ul ul>li a {
+  color: var(--bs-light) !important;
+}
+
+[data-bs-theme=light].compact #main-menu ul ul>li a:hover {
+  color: var(--bs-black) !important;
+}
+
+.compact #main-menu ul ul>li:hover {
+  background-color: var(--bs-secondary-bg-subtle) !important;
+}
+
+.compact #main-menu>ul.nav>li:last-child>div:nth-child(2)>span {
+  font-size: .7em;
+}
+
+.compact #main-menu ul.nav li:last-child div span:last-child {
+  text-align: center !important;
+  margin: 0 auto;
+}
+
+/* Page Content */
+#pageContent i {
+  margin-right: .25em;
+}
+
+#pageContent a:hover {
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1)) !important;
+  --bs-link-color-rgb: var(--bs-link-hover-color-rgb) !important;
+}
+
+#pageContent label {
+  width: 10rem;
+}
+
+#pageContent div.input-group:not(:first-child) {
+  margin-top: .5em;
+}
+
+#pageContent .form-check-input:checked {
+  background-color: var(--bs-success);
+  border-color: var(--bs-success);
+}
+
+/* Keyboard */
+#keyboard {
+  z-index: 100;
+}
+
+.hg-theme-default .hg-button.hg-standardBtn {
+  width: 3rem;
+}
+
+[data-bs-theme=dark] .simple-keyboard {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+[data-bs-theme=dark] .simple-keyboard .hg-button {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+[data-bs-theme=dark] .simple-keyboard .hg-button:active {
+  background: #1c4995;
+  color: white;
+}
+
+[data-bs-theme=dark] #root .simple-keyboard+.simple-keyboard-preview {
+  background: #1c4995;
+}

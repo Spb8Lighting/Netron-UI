@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netron template</title>
+  <link defer href="./vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link defer href="./vendors/font-awesome/css/fontawesome.min.css" rel="stylesheet">
+  <link defer href="./vendors/font-awesome/css/solid.min.css" rel="stylesheet" />
+  <link defer href="./vendors/simple-keyboard/css/index.css" rel="stylesheet" />
+  <link defer href="./assets/css/app.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="m-0 p-0 row border-light-subtle border-bottom bg-body">
+    <div id="menuToggle" class="col-auto m-0 p-0"></div>
+    <div id="pageTitle" class="col m-0 p-0 fs-3 d-flex align-items-center"></div>
+    <div id="themeSwitcher" class="m-0 p-0 col-auto align-items-center d-flex"></div>
+  </nav>
+  <div class="m-0 p-0 container-fluid row overflow-hidden">
+    <nav id="main-menu" class="m-0 p-0 bg-secondary-subtle position-relative"></nav>
+    <div id="pageContent" class="m-0 p-2 col overflow-y-auto"></div>
+  </div>
+  <div id="keyboard" class="m-2 p-0 position-absolute end-0 d-none">
+    <div class="simple-keyboard"></div>
+  </div>
+  <aside id="alert" class="m-1 p-2 alert position-absolute top-0 end-0 fade hide" role="alert"></aside>
+  <script defer src="./vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "config": "./assets/js/config.js",
+        "DarkTheme": "./assets/js/class.DarkTheme.js",
+        "Menu": "./assets/js/class.Menu.js",
+        "Page": "./assets/js/class.Page.js",
+        "Translate": "./assets/js/class.Translate.js",
+        "Device": "./assets/js/class.Device.js",
+        "FetchJSON": "./assets/js/class.FetchJSON.js",
+        "simple-keyboard": "./vendors/simple-keyboard/js/index.modern.esm.js",
+        "MobileKeyboard": "./assets/js/class.MobileKeyboard.js"
+      }
+    }
+  </script>
+  <script defer type="module" src="./assets/js/app.js"></script>
+</body>
+
+</html>

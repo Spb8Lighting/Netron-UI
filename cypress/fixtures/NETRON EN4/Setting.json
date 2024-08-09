@@ -1,0 +1,19 @@
+{
+  "DeviceName": "SPB8-EN4-1",
+  "DeviceType": "NETRON EN4",
+  "DeviceID": 0,
+  "DisplayBrightness": 10,
+  "DisplayTimeout": 3,
+  "LEDBrightness": 5,
+  "GlobalRDMmode": 1,
+  "HomeScreenMode": 0,
+  "PINMode": 0,
+  "PinNum": 0,
+  "signallossmode": 2,
+  "signallossfadetime": 30,
+  "signallossHoldtime": 0,
+  "startupmode": 1,
+  "UniverseMode": 0,
+  "signallossCueNUM": 0,
+  "startupCueNUM": 0
+}

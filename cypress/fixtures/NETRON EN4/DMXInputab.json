@@ -1,0 +1,30 @@
+[
+  {
+    "InputSource": 1,
+    "InputSendValue": 0,
+    "InputUniverse": 1,
+    "InputProtocol": 0,
+    "InputFrameRate": 5,
+    "InputRDM": 1,
+    "InputMerge": 0,
+    "InputMergeUniverse": 6,
+    "InputMergeProtocol": 0,
+    "InputOffsetAddr": 1,
+    "InputRangeFrom": 1,
+    "InputRangeTo": 512
+  },
+  {
+    "InputSource": 1,
+    "InputSendValue": 0,
+    "InputUniverse": 0,
+    "InputProtocol": 0,
+    "InputFrameRate": 5,
+    "InputRDM": 1,
+    "InputMerge": 0,
+    "InputMergeUniverse": 4,
+    "InputMergeProtocol": 0,
+    "InputOffsetAddr": 1,
+    "InputRangeFrom": 1,
+    "InputRangeTo": 512
+  }
+]
