@@ -12,8 +12,13 @@ export default class Menu {
   #links = new Map()
 
   /**
-   * Add button to switch menu
-   * @param {documentElement} home 
+   * Initializes the menu and sets up event listeners.
+   * @param {Object} params - The parameters for initializing the menu.
+   * @param {string} params.EventName - The event name used for page changes and other interactions.
+   * @param {Object} params._DEVICE_ - The device object to interact with.
+   * @param {Object} params.config - The configuration object for menu items.
+   * @param {HTMLElement} params.toggle - The element used to toggle the menu.
+   * @param {HTMLElement} params.menu - The element where the menu will be appended.
    */
   constructor({ EventName, _DEVICE_, config, toggle, menu }) {
     this.#device = _DEVICE_
@@ -36,6 +41,10 @@ export default class Menu {
     this.addEvents()
   }
 
+  /**
+   * Creates a home link for the menu.
+   * @returns {HTMLAnchorElement} - The home link element.
+   */
   createHomeLink() {
     const a = document.createElement('a')
     a.className = 'm-0 p-0 bg-secondary-subtle'
@@ -51,7 +60,7 @@ export default class Menu {
   }
 
   /**
-   * Generate HTML menu from this.#config
+   * Generates the HTML structure of the menu based on the provided configuration.
    */
   createMenu() {
     this.#menu.className = 'nav h-100 flex-column'
@@ -60,10 +69,19 @@ export default class Menu {
     }
   }
 
+  /**
+   * Retrieves the parent sub-menu of a given target element.
+   * @param {HTMLElement} target - The target element.
+   * @returns {HTMLElement} - The parent sub-menu element.
+   */
   getSubMenu(target) {
     return target?.parentNode?.parentNode?.parentNode?.firstChild
   }
 
+  /**
+   * Navigates to the specified page by clicking the appropriate link.
+   * @param {string} searchPage - The page to navigate to.
+   */
   navigate(searchPage) {
     if (this.#links.has(searchPage)) {
       const link = this.#links.get(searchPage)
@@ -80,11 +98,22 @@ export default class Menu {
     }
   }
 
+  /**
+   * Hides the sub-menu associated with the target element.
+   * @param {HTMLElement} target - The target element.
+   */
   hideSubMenu(target) {
     const instance = bootstrap.Collapse.getInstance(target.nextSibling)
     instance.hide()
   }
 
+  /**
+   * Creates a sub-menu item.
+   * @param {Object} params - The parameters for creating the sub-menu item.
+   * @param {string} params.name - The name of the sub-menu.
+   * @param {Object} params.prop - The properties of the sub-menu item.
+   * @returns {HTMLLIElement} - The created sub-menu item element.
+   */
   createSubMenu({ name, prop }) {
     const li = document.createElement('li')
     li.className = 'nav-item'
@@ -127,6 +156,10 @@ export default class Menu {
     return li
   }
 
+  /**
+   * Creates an "Identify" section displaying device information and a switch to trigger identification.
+   * @returns {HTMLLIElement} - The created identify section element.
+   */
   createIdentify() {
     const li = document.createElement('li')
     li.className = 'p-2 mt-auto'
@@ -180,8 +213,11 @@ export default class Menu {
     return li
   }
 
+  /**
+   * Hides all currently visible sub-menus.
+   */
   hideAllSubMenu() {
-    const ul = document.querySelectorAll('ul[data-bs-parent')
+    const ul = document.querySelectorAll('ul[data-bs-parent]')
     ul.forEach(list => {
       if (list.classList.contains('show')) {
         const instance = bootstrap.Collapse.getInstance(list)
@@ -190,6 +226,9 @@ export default class Menu {
     })
   }
 
+  /**
+   * Resets the active state of all menu links.
+   */
   resetActiveLink() {
     const allLinksWithChild = this.#menu.querySelectorAll('#main-menu .active')
     allLinksWithChild.forEach(link => {
@@ -199,6 +238,9 @@ export default class Menu {
     })
   }
 
+  /**
+   * Adds event listeners for menu interactions and updates.
+   */
   addEvents() {
     // Once device is ready, set-up the createIdentify
     document.addEventListener(this.#EventName.deviceReady, e => {
