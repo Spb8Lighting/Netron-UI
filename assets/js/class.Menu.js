@@ -28,24 +28,24 @@ export default class Menu {
 
     this.#pageChange = new Event(EventName.pageChange)
 
-    this.createMenu()
+    this.#createMenu()
     menu.append(this.#menu)
 
-    toggle.parentNode.prepend(this.createHomeLink())
+    toggle.parentNode.prepend(this.#createHomeLink())
 
     this.#input.className = 'btn fa fa-bars'
     this.#input.title = 'Compact the main menu'
 
     toggle.append(this.#input)
 
-    this.addEvents()
+    this.#addEvents()
   }
 
   /**
    * Creates a home link for the menu.
    * @returns {HTMLAnchorElement} - The home link element.
    */
-  createHomeLink() {
+  #createHomeLink() {
     const a = document.createElement('a')
     a.className = 'm-0 p-0 bg-secondary-subtle'
     a.href = './'
@@ -62,10 +62,10 @@ export default class Menu {
   /**
    * Generates the HTML structure of the menu based on the provided configuration.
    */
-  createMenu() {
+  #createMenu() {
     this.#menu.className = 'nav h-100 flex-column'
     for (const menu in this.config) {
-      this.#menu.append(this.createSubMenu({ name: menu, prop: this.config[menu] }))
+      this.#menu.append(this.#createSubMenu({ name: menu, prop: this.config[menu] }))
     }
   }
 
@@ -74,7 +74,7 @@ export default class Menu {
    * @param {HTMLElement} target - The target element.
    * @returns {HTMLElement} - The parent sub-menu element.
    */
-  getSubMenu(target) {
+  #getSubMenu(target) {
     return target?.parentNode?.parentNode?.parentNode?.firstChild
   }
 
@@ -85,7 +85,7 @@ export default class Menu {
   navigate(searchPage) {
     if (this.#links.has(searchPage)) {
       const link = this.#links.get(searchPage)
-      const isSubMenu = this.getSubMenu(link)
+      const isSubMenu = this.#getSubMenu(link)
       if (isSubMenu.nextSibling) {
         isSubMenu.click()
         link.click()
@@ -114,7 +114,7 @@ export default class Menu {
    * @param {Object} params.prop - The properties of the sub-menu item.
    * @returns {HTMLLIElement} - The created sub-menu item element.
    */
-  createSubMenu({ name, prop }) {
+  #createSubMenu({ name, prop }) {
     const li = document.createElement('li')
     li.className = 'nav-item'
     if (prop?.restricted) {
@@ -148,7 +148,7 @@ export default class Menu {
       a.ariaControls = name
 
       for (const item in prop.items) {
-        ul.append(this.createSubMenu({ name: `${name}${item[0].toUpperCase() + item.slice(1)}`, prop: prop.items[item] }))
+        ul.append(this.#createSubMenu({ name: `${name}${item[0].toUpperCase() + item.slice(1)}`, prop: prop.items[item] }))
       }
       li.append(ul)
     }
@@ -160,7 +160,7 @@ export default class Menu {
    * Creates an "Identify" section displaying device information and a switch to trigger identification.
    * @returns {HTMLLIElement} - The created identify section element.
    */
-  createIdentify() {
+  #createIdentify() {
     const li = document.createElement('li')
     li.className = 'p-2 mt-auto'
 
@@ -241,10 +241,10 @@ export default class Menu {
   /**
    * Adds event listeners for menu interactions and updates.
    */
-  addEvents() {
+  #addEvents() {
     // Once device is ready, set-up the createIdentify
     document.addEventListener(this.#EventName.deviceReady, e => {
-      this.#menu.append(this.createIdentify())
+      this.#menu.append(this.#createIdentify())
 
       // Remove link not relative to current device
       const lis = this.#menu.querySelectorAll('li[data-restricted]')

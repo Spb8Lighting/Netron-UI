@@ -59,6 +59,9 @@ export default class Page {
         const div = target.parentNode.parentNode
         const input = div.querySelector('input')
 
+        // Always update keyboard value
+        this.#keyboard.updateValue(input.value)
+
         if (!this.#keyboard.keyboardNode.previousSibling.isSameNode(div)) {
           this.#keyboard.setInput(input)
           div.after(this.#keyboard.keyboardNode)

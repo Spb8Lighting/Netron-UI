@@ -14,13 +14,13 @@ export default class Translate {
    */
   constructor({ _DEVICE_ }) {
     this.#device = _DEVICE_
-    this.createTranslateMethods()
+    this.#createTranslateMethods()
   }
 
   /**
    * Dynamically creates translation methods based on the `translate` configuration.
    */
-  createTranslateMethods() {
+  #createTranslateMethods() {
     for (const attr in translate) {
       const methodName = `get${attr.charAt(0).toUpperCase()}${attr.slice(1)}`
       Translate.prototype[methodName] = Object.defineProperty(
@@ -94,7 +94,7 @@ export default class Translate {
     }
 
     const valueNumber = Number(value)
-    const isArtnet = this.determineArtnetProtocol(line)
+    const isArtnet = this.#determineArtnetProtocol(line)
 
     if (this.#device.setting.UniverseMode === 0 && isArtnet) {
       return device ? valueNumber - 1 : valueNumber + 1
@@ -110,7 +110,7 @@ export default class Translate {
    * @param {Object} line - The line object containing protocol information.
    * @returns {boolean} - True if the protocol is Artnet, otherwise false.
    */
-  determineArtnetProtocol(line) {
+  #determineArtnetProtocol(line) {
     if (line?.ptProtocol !== undefined) {
       return this.isProtocolArtnet(line.ptProtocol)
     } else if (line?.ptResendProtocol !== undefined) {
@@ -151,7 +151,7 @@ export default class Translate {
    * @param {Array} array - The array to retrieve the value from.
    * @returns {*} - The value at the index or the index itself if the value is not found.
    */
-  getRealValue(index, array) {
+  #getRealValue(index, array) {
     const value = array[index]
     return value !== undefined ? value : index
   }
@@ -164,7 +164,7 @@ export default class Translate {
    * @returns {*} - The address mode value.
    */
   addressmode({ value, desc }) {
-    return this.getRealValue(value, this.getAddressmode(desc))
+    return this.#getRealValue(value, this.getAddressmode(desc))
   }
 
   /**
@@ -175,7 +175,7 @@ export default class Translate {
    * @returns {*} - The merge mode value.
    */
   ptMergeMode({ value, desc }) {
-    return this.getRealValue(value, this.getPtMergeMode(desc))
+    return this.#getRealValue(value, this.getPtMergeMode(desc))
   }
   MergerMode({ value, desc }) { return this.ptMergeMode({ value: value, desc: desc }) }
 
@@ -187,7 +187,7 @@ export default class Translate {
    * @returns {*} - The source value.
    */
   ptSource({ value, desc }) {
-    return this.getRealValue(value, this.getPtSource(desc))
+    return this.#getRealValue(value, this.getPtSource(desc))
   }
 
   /**
@@ -205,7 +205,7 @@ export default class Translate {
     if (line?.InputSource !== undefined && !this.InputSource({ value: line.InputSource, rdm: true })) {
       return this.#empty
     }
-    return this.getRealValue(value, this.getPtRDM(desc))
+    return this.#getRealValue(value, this.getPtRDM(desc))
   }
   InputRDM({ value, line, desc }) { return this.ptRDM({ value: value, line: line, desc: desc }) }
 
@@ -223,7 +223,7 @@ export default class Translate {
     if (line?.InputSource !== undefined && !this.InputSource({ value: line.InputSource, inputProtocol: true })) {
       return this.#empty
     }
-    return this.getRealValue(value, this.getPtProtocol())
+    return this.#getRealValue(value, this.getPtProtocol())
   }
   InputProtocol({ value, line }) { return this.ptProtocol({ value: value, line: line }) }
   ptResendProtocol({ value, line }) { return this.ptProtocol({ value: value, line: line }) }
@@ -241,7 +241,7 @@ export default class Translate {
     if (line?.ptMode !== undefined && !this.ptMode({ value: line.ptMode, framerate: true })) {
       return this.#empty
     }
-    return this.getRealValue(value, this.getPtFramerate(desc))
+    return this.#getRealValue(value, this.getPtFramerate(desc))
   }
   InputFrameRate({ value, line, desc }) { return this.ptFramerate({ value: value, line: line, desc: desc }) }
   MergerFrameRate({ value, line, desc }) { return this.ptFramerate({ value: value, line: line, desc: desc }) }
@@ -257,7 +257,7 @@ export default class Translate {
    * @returns {*} - The input source value.
    */
   InputSource({ value, desc, inputProtocol, rdm, InputUniverse }) {
-    const realValue = this.getRealValue(value, this.getInputSource(desc))
+    const realValue = this.#getRealValue(value, this.getInputSource(desc))
     switch (Number(value)) {
       case 0: // DMX
         return inputProtocol || InputUniverse ? false : realValue
@@ -288,7 +288,7 @@ export default class Translate {
           disabled: true
         }
       } else {
-        feedback = this.generateClonePortFeedback(currentPort, currentDMXPort, i, portNumber)
+        feedback = this.#generateClonePortFeedback(currentPort, currentDMXPort, i, portNumber)
       }
       list.add(feedback)
     })
@@ -306,7 +306,7 @@ export default class Translate {
    * @param {number} portNumber - The port number.
    * @returns {Object} - Feedback object about the port's cloning status.
    */
-  generateClonePortFeedback(currentPort, currentDMXPort, i, portNumber) {
+  #generateClonePortFeedback(currentPort, currentDMXPort, i, portNumber) {
     if (!this.isClonedPort({ portID: i, port: { ...currentDMXPort, ptClonePort: currentPort } })) {
       return {
         name: i === currentPort ? word.page.dmxPorts_ClonePort_None
@@ -367,9 +367,9 @@ export default class Translate {
   ptMode({ value, desc, universe, rdm, protocol, framerate }) {
     const ptModeDesc = this.getPtMode(desc)
     if (universe || rdm || protocol || framerate) {
-      return this.getRealValue(value, ptModeDesc)
+      return this.#getRealValue(value, ptModeDesc)
     }
-    return this.getRealValue(value, ptModeDesc)
+    return this.#getRealValue(value, ptModeDesc)
   }
 
   /**

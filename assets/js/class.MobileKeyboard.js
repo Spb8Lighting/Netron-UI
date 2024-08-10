@@ -21,8 +21,8 @@ export default class MobileKeyboard {
    */
   constructor() {
     this.keyboard = new Keyboard({
-      onChange: input => this.onChange(input),
-      onKeyPress: button => this.onKeyPress(button),
+      onChange: input => this.#onChange(input),
+      onKeyPress: button => this.#onKeyPress(button),
       mergeDisplay: true,
       preventMouseDownDefault: true,
       disableCaretPositioning: false,
@@ -62,19 +62,19 @@ export default class MobileKeyboard {
         '{abc}': 'ABC'
       }
     })
-    this.addEvents()
+    this.#addEvents()
   }
 
   /**
    * Adds event listeners to handle user interactions
    */
-  addEvents() {
+  #addEvents() {
     document.addEventListener('click', e => {
       const target = e.target
       if (
-        !this.keyboardNode.classList.contains('d-none') &&
-        !target.matches('.fa-keyboard, .keyboard, .hg-button, .hg-row, .hg-rows, .simple-keyboard') &&
-        !target.isSameNode(this.#currentInput)
+        !this.keyboardNode.classList.contains('d-none')
+        && !target.matches('.fa-keyboard, .keyboard, .hg-button, .hg-row, .hg-rows, .simple-keyboard')
+        && !target.isSameNode(this.#currentInput)
       ) {
         this.hide()
       }
@@ -89,14 +89,14 @@ export default class MobileKeyboard {
     const isVisible = !this.keyboardNode.classList.contains('d-none')
     this.keyboardNode.classList.toggle('d-none', isVisible)
     if (!isVisible) {
-      this.focus()
+      this.#focus()
     }
   }
 
   /**
    * Sets focus on the current input field
    */
-  focus() {
+  #focus() {
     this.#currentInput?.focus()
   }
 
@@ -105,7 +105,7 @@ export default class MobileKeyboard {
    */
   show() {
     this.keyboardNode.classList.remove('d-none')
-    this.focus()
+    this.#focus()
   }
 
   /**
@@ -119,7 +119,7 @@ export default class MobileKeyboard {
    * Updates the value of the current input field with the current keyboard input
    * @param {string} input - The string representing the keyboard input
    */
-  onChange(input) {
+  #onChange(input) {
     if (this.#currentInput) {
       this.#currentInput.value = input
     }
@@ -129,19 +129,19 @@ export default class MobileKeyboard {
    * Handles actions when a key is pressed on the virtual keyboard
    * @param {string} button - The key that was pressed
    */
-  onKeyPress(button) {
+  #onKeyPress(button) {
     if (button === '{shift}' || button === '{lock}') {
-      this.handleShift()
+      this.#handleShift()
     }
     if (button === '{numbers}' || button === '{abc}') {
-      this.handleNumbers()
+      this.#handleNumbers()
     }
   }
 
   /**
    * Changes the keyboard layout between 'default' and 'shift'
    */
-  handleShift() {
+  #handleShift() {
     this.keyboard.setOptions({
       layoutName: this.keyboard.options.layoutName === 'default' ? 'shift' : 'default'
     })
@@ -150,7 +150,7 @@ export default class MobileKeyboard {
   /**
    * Changes the keyboard layout between 'numbers' and 'default'
    */
-  handleNumbers() {
+  #handleNumbers() {
     this.keyboard.setOptions({
       layoutName: this.keyboard.options.layoutName !== 'numbers' ? 'numbers' : 'default'
     })
@@ -169,5 +169,12 @@ export default class MobileKeyboard {
     })
 
     this.show()
+  }
+  /**
+   * Update current keyboard value
+   * @param {String} value 
+   */
+  updateValue(value) {
+    this.keyboard.setInput(value)
   }
 }
