@@ -11,19 +11,19 @@ export default class DarkTheme {
     if (!home) { throw new Error('The "home" element is required!') }
 
     // Check is localStorage is enable
-    this.#localStorage = this.checkLocalStorageAvailability()
+    this.#localStorage = this.#checkLocalStorageAvailability()
 
     // Check if 'home' can be used to add our theme switcher
     if (home instanceof Element) {
       try {
         // Generate HTML switch and add it to 'home' element
-        home.append(...this.generateThemeSwitcherDOM())
+        home.append(...this.#generateThemeSwitcherDOM())
 
         // Add change events to the HTML switch and OS change
-        this.addEvents()
+        this.#addEvents()
 
         // Apply OS theme or the one stored in localStorage
-        this.toggleTheme(this.getPreferredTheme())
+        this.toggleTheme(this.#getPreferredTheme())
       } catch (e) {
         console.error('For unknown reason, the DOM modification was rejected', e)
       }
@@ -34,7 +34,7 @@ export default class DarkTheme {
    * Generate the DOM for the theme switcher
    * @return {[Element|Element|Element]}
    */
-  generateThemeSwitcherDOM() {
+  #generateThemeSwitcherDOM() {
     const divInput = document.createElement('div')
     divInput.className = 'ms-2 form-switch fs-5'
 
@@ -61,7 +61,7 @@ export default class DarkTheme {
    * Detect if localStorage is available
    * @returns {Boolean} true if localStorage is available, else false
    */
-  checkLocalStorageAvailability() {
+  #checkLocalStorageAvailability() {
     try {
       const key = '_storage_test'
       window.localStorage.setItem(key, null)
@@ -76,7 +76,7 @@ export default class DarkTheme {
    * Return the stored theme from localStorage (if available)
    * @returns {String} dark or light
    */
-  getStoredTheme() {
+  #getStoredTheme() {
     if (this.#localStorage) {
       return localStorage.getItem('theme')
     }
@@ -87,7 +87,7 @@ export default class DarkTheme {
    * Store the theme string value in localStorage (if available)
    * @param {String} theme dark or light
    */
-  setStoredTheme(theme) {
+  #setStoredTheme(theme) {
     if (this.#localStorage) {
       localStorage.setItem('theme', theme)
     }
@@ -98,15 +98,15 @@ export default class DarkTheme {
    * @param {string} value 
    * @returns 
    */
-  hasValidTheme(value) { return ['light', 'dark'].includes(value) }
+  #hasValidTheme(value) { return ['light', 'dark'].includes(value) }
 
   /**
    * Return the current theme string value from OS if not already stored in localStorage 
    * @returns {String} dark or light
    */
-  getPreferredTheme() {
-    const storedTheme = this.getStoredTheme()
-    if (storedTheme && this.hasValidTheme(storedTheme)) { // If a localStorage value exists, return it
+  #getPreferredTheme() {
+    const storedTheme = this.#getStoredTheme()
+    if (storedTheme && this.#hasValidTheme(storedTheme)) { // If a localStorage value exists, return it
       return storedTheme
     }
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -122,7 +122,7 @@ export default class DarkTheme {
       ? (toDark ? 'dark' : 'light')
       : (toDark && toDark !== 'light') ? 'dark' : 'light'
 
-    this.setStoredTheme(theme) // Store the current theme value in the localStorage to keep user choice in memore for next visit
+    this.#setStoredTheme(theme) // Store the current theme value in the localStorage to keep user choice in memore for next visit
 
     document.documentElement.dataset.bsTheme = theme // Apply the theme on the HTML node (bootstrap)
     this.#input.checked = (theme === 'dark') // Set the input to false = Light theme or true = Dark theme to provide an additional user feedback
@@ -131,22 +131,22 @@ export default class DarkTheme {
   /**
    * Set the different event listener to make the theme switch working as expected (directly from Input or OS)
    */
-  addEvents() {
+  #addEvents() {
     // HTML switch change
-    this.#input.addEventListener('change', this.inputChangeHandler.bind(this))
+    this.#input.addEventListener('change', this.#inputChangeHandler.bind(this))
 
     // System theme change
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.windowChangeHandler.bind(this))
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.#windowChangeHandler.bind(this))
   }
   /**
    * Input change handler to change theme based on input checked state
    * @param {event} e 
    */
-  inputChangeHandler(e) { this.toggleTheme(e.target.checked) }
+  #inputChangeHandler(e) { this.toggleTheme(e.target.checked) }
 
   /**
    * OS theme change handler, to change theme when the OS theme is changing
    * @param {Object} matches matchMedia return
    */
-  windowChangeHandler({ matches }) { this.toggleTheme(matches) }
+  #windowChangeHandler({ matches }) { this.toggleTheme(matches) }
 }
