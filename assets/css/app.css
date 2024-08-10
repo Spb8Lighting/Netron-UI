@@ -361,6 +361,18 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
     padding: 0.5rem;
   }
 
+  .form-select {
+    padding: .1rem 2.25rem .1rem .75rem;
+  }
+
+  .input-group-text {
+    padding: .1rem .75rem;
+  }
+
+  .input-group .form-switch {
+    font-size: 1.2rem !important;
+  }
+
   /* Keyboard */
   .hg-theme-default .hg-button.hg-standardBtn {
     width: 1.8rem;
