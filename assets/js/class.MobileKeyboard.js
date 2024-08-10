@@ -1,10 +1,24 @@
 import Keyboard from 'simple-keyboard'
 
+/**
+ * Class representing a mobile virtual keyboard
+ */
 export default class MobileKeyboard {
+  /**
+   * @private
+   * @type {HTMLElement | undefined}
+   */
   #currentInput = undefined
 
+  /**
+   * Reference to the DOM node where the keyboard is displayed
+   * @type {HTMLElement}
+   */
   keyboardNode = document.getElementById('keyboard')
 
+  /**
+   * Creates an instance of MobileKeyboard and initializes the virtual keyboard
+   */
   constructor() {
     this.keyboard = new Keyboard({
       onChange: input => this.onChange(input),
@@ -51,83 +65,109 @@ export default class MobileKeyboard {
     this.addEvents()
   }
 
+  /**
+   * Adds event listeners to handle user interactions
+   */
   addEvents() {
-    // Close keyboard
     document.addEventListener('click', e => {
+      const target = e.target
       if (
-        !this.keyboardNode.classList.contains('d-none')
-        && !e.target.className.includes('fa-keyboard')
-        && !e.target.className.includes('keyboard')
-        && !e.target.isSameNode(this.#currentInput)
-        && !e.target.className.includes('hg-button')
-        && !e.target.className.includes('hg-row')
-        && !e.target.className.includes('simple-keyboard')
+        !this.keyboardNode.classList.contains('d-none') &&
+        !target.matches('.fa-keyboard, .keyboard, .hg-button, .hg-row, .hg-rows, .simple-keyboard') &&
+        !target.isSameNode(this.#currentInput)
       ) {
         this.hide()
       }
     })
   }
 
+  /**
+   * Toggles the visibility of the virtual keyboard
+   * Shows the keyboard if it is hidden, otherwise hides it
+   */
   toggle() {
-    this.keyboardNode.classList.toggle('d-none')
-    if (!this.keyboardNode.classList.contains('d-none')) {
+    const isVisible = !this.keyboardNode.classList.contains('d-none')
+    this.keyboardNode.classList.toggle('d-none', isVisible)
+    if (!isVisible) {
       this.focus()
     }
   }
 
+  /**
+   * Sets focus on the current input field
+   */
   focus() {
-    this.#currentInput.focus()
+    this.#currentInput?.focus()
   }
 
+  /**
+   * Shows the virtual keyboard and focuses on the current input field
+   */
   show() {
-    if (this.keyboardNode.classList.contains('d-none')) {
-      this.keyboardNode.classList.remove('d-none')
-    }
+    this.keyboardNode.classList.remove('d-none')
     this.focus()
   }
 
+  /**
+   * Hides the virtual keyboard
+   */
   hide() {
-    if (!this.keyboardNode.classList.contains('d-none')) {
-      this.keyboardNode.classList.add('d-none')
+    this.keyboardNode.classList.add('d-none')
+  }
+
+  /**
+   * Updates the value of the current input field with the current keyboard input
+   * @param {string} input - The string representing the keyboard input
+   */
+  onChange(input) {
+    if (this.#currentInput) {
+      this.#currentInput.value = input
     }
   }
 
-  onChange(input) {
-    this.#currentInput.value = input
-  }
-
+  /**
+   * Handles actions when a key is pressed on the virtual keyboard
+   * @param {string} button - The key that was pressed
+   */
   onKeyPress(button) {
-    if (button === '{shift}' || button === '{lock}') { this.handleShift() }
-    if (button === '{numbers}' || button === '{abc}') { this.handleNumbers() }
+    if (button === '{shift}' || button === '{lock}') {
+      this.handleShift()
+    }
+    if (button === '{numbers}' || button === '{abc}') {
+      this.handleNumbers()
+    }
   }
 
+  /**
+   * Changes the keyboard layout between 'default' and 'shift'
+   */
   handleShift() {
     this.keyboard.setOptions({
       layoutName: this.keyboard.options.layoutName === 'default' ? 'shift' : 'default'
     })
   }
 
+  /**
+   * Changes the keyboard layout between 'numbers' and 'default'
+   */
   handleNumbers() {
     this.keyboard.setOptions({
       layoutName: this.keyboard.options.layoutName !== 'numbers' ? 'numbers' : 'default'
     })
   }
 
+  /**
+   * Sets the current input field and adjusts the keyboard layout based on the input type
+   * @param {HTMLInputElement | HTMLTextAreaElement} input - The input field to associate with the virtual keyboard
+   */
   setInput(input) {
     this.#currentInput = input
     this.keyboard.replaceInput({ default: this.#currentInput.value, input2: this.#currentInput.id })
 
-    if (this.#currentInput.type === 'number') {
-      this.keyboard.setOptions({
-        layoutName: 'numbers'
-      })
-    } else {
-      this.keyboard.setOptions({
-        layoutName: 'default'
-      })
-    }
+    this.keyboard.setOptions({
+      layoutName: this.#currentInput.type === 'number' ? 'numbers' : 'default'
+    })
 
     this.show()
   }
 }
-
