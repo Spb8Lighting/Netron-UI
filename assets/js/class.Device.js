@@ -3,13 +3,16 @@ import { apis } from 'config'
 export default class Device {
 
   #fetch = undefined
-
   #EventName = undefined
 
   constructor({ EventName, _FETCH_ }) {
-    this.#EventName = EventName
+    this.#validatePresence(EventName, 'EventName')
+    this.#validatePresence(_FETCH_, '_FETCH_')
 
+    this.#EventName = EventName
     this.#fetch = _FETCH_
+
+    // Initialize files and data
     this._setting = { file: apis.setting, data: {} }
     this._IP = { file: apis.IP, data: {} }
     this._index = { file: apis.index, data: {} }
@@ -23,47 +26,89 @@ export default class Device {
     this._remoteInputs = { file: apis.remoteInputs, data: {} }
   }
 
+  /**
+   * Checks if a parameter is present; if not, throws an error with the parameter name.
+   * @param {*} param Parameter to check.
+   * @param {String} paramName Parameter name used in the error message.
+   * @throws {Error} If the parameter is missing.
+   */
+  #validatePresence(param, paramName) {
+    if (param === undefined || param === null) {
+      throw new Error(`The '${paramName}' parameter is required.`)
+    }
+  }
+
+  /**
+   * Downloads all necessary files for the device and additional files if Netron RDM 10 is detected.
+   * @returns {Boolean} True if all files were downloaded successfully, otherwise false.
+   */
   async bulkUpdate() {
-    return new Promise(async resolve => {
-      const data = await this.#fetch.bulkGet({ arrayOfFile: this.getFiles() })
+    try {
+      const data = await this.#fetch.bulkGet({ arrayOfFile: this.#getFiles() })
+
       let i = 0
       for (const key in this) {
-        this[key.substring(1)] = data[i]
-        i++
+        if (this[key]?.file) {
+          this[key.substring(1)] = data[i]
+          i++
+        }
       }
-      // Add additional properties related to Netron RDM10
-      this.setNetronRDM10()
+
+      this.#setNetronRDM10()
       if (this._setting.data.DeviceType === 'NETRON RDM10') {
-        const dataRDM10 = await this.#fetch.bulkGet({ arrayOfFile: this.getNetronRDM10Files() })
+        const dataRDM10 = await this.#fetch.bulkGet({ arrayOfFile: this.#getNetronRDM10Files() })
         this.dmxInputTab = dataRDM10[0]
         this.dmxInputMerger = dataRDM10[1]
       }
-      resolve(true)
-    })
+
+      return true
+    } catch (error) {
+      console.error('Error during bulkUpdate:', error)
+      return false  // Feedback on the error
+    }
   }
 
-  getFiles() {
+  /**
+   * Prepares the list of files to be downloaded for all devices.
+   * @returns {Set} List of files to be downloaded.
+   */
+  #getFiles() {
     const feedback = new Set()
     for (const key in this) {
-      feedback.add(this[key].file)
+      if (this[key]?.file) {
+        feedback.add(this[key].file)
+      }
     }
     return feedback
   }
 
-  getNetronRDM10Files() {
+  /**
+   * Prepares the list of additional files to be downloaded for the Netron RDM10 device.
+   * @returns {Set} List of additional files to be downloaded.
+   */
+  #getNetronRDM10Files() {
     const feedback = new Set()
     feedback.add(this._dmxInputTab.file)
     feedback.add(this._dmxInputMerger.file)
     return feedback
   }
 
-  setNetronRDM10() {
+  /**
+   * Sets additional attributes for the Netron RDM10 device.
+   */
+  #setNetronRDM10() {
     this._dmxInputTab = { file: apis.dmxInputTab, data: {} }
     this._dmxInputMerger = { file: apis.dmxInputMerger, data: {} }
   }
 
-  reIpAddress(val) {
-    return val.split('.').map(input => Number(input)).join('.')
+  /**
+   * Normalizes an IP address or netmask by converting each octet to a number.
+   * Example: "192.168.001.001" becomes "192.168.1.1".
+   * @param {string} val - The IP address or netmask as a string.
+   * @returns {string} - The normalized IP address or netmask.
+   */
+  #_reIpAddress(val) {
+    return val.split('.').map(input => String(Number(input))).join('.')
   }
 
   /* Getters */
@@ -89,8 +134,8 @@ export default class Device {
   set IP(value) {
     this._IP.data = {
       ...value,
-      ipaddress: this.reIpAddress(value.ipaddress),
-      netmask: this.reIpAddress(value.netmask)
+      ipaddress: this.#_reIpAddress(value.ipaddress),
+      netmask: this.#_reIpAddress(value.netmask)
     }
   }
   set index(value) {
@@ -105,27 +150,30 @@ export default class Device {
     this._dmxPorts.data = value
   }
   set identify(value) {
-    if (Number(value.IdentifyStatus) > 0) { // Sent event to activate the notify feedback when on
+    if (Number(value.IdentifyStatus) > 0) {
       document.dispatchEvent(new Event(this.#EventName.identifyIsOn))
     }
     this._identify.data = value
   }
   set presets(value) {
-    this._presets.data = value.map(preset => {
-      return {
-        ...preset,
-        name: preset.name.trim()
-      }
-    })
+    this._presets.data = this.#_processPresets(value)
   }
   set userPresets(value) {
-    this._userPresets.data = value.map(preset => {
-      return {
-        ...preset,
-        name: preset.name.trim()
-      }
-    })
+    this._userPresets.data = this.#_processPresets(value)
   }
+
+  /**
+   * Removes whitespace around the name attribute of each preset.
+   * @param {[Object]} presets List of presets.
+   * @returns {[Object]} List of presets with normalized names.
+   */
+  #_processPresets(presets) {
+    return presets.map(preset => ({
+      ...preset,
+      name: preset.name.trim()
+    }))
+  }
+
   set cues(value) {
     this._cues.data = value
   }
@@ -145,28 +193,56 @@ export default class Device {
     this._dmxInputMerger.data = value
   }
 
-  /* Identify methods */
+  /* Identify Methods */
 
-  isIdentified() { return Number(value.IdentifyStatus) > 0 }
-
+  /**
+   * Sends the identify function to the device.
+   * @param {Integer} IdentifyStatus Status to set (default 2).
+   */
   async setIdentify(IdentifyStatus = 2) {
+    if (this._identify.data.IdentifyStatus === IdentifyStatus) {
+      return // Do nothing if the state is already the same
+    }
+
     const formData = new FormData()
     formData.append('IdentifyStatus', IdentifyStatus)
     formData.append('EndFlag', 1)
 
-    await this.#fetch.post({ url: apis.setIdentify, formData: formData })
-
-    this._identify.data.IdentifyStatus = IdentifyStatus
+    try {
+      await this.#fetch.post({ url: apis.setIdentify, formData: formData })
+      this._identify.data.IdentifyStatus = IdentifyStatus
+    } catch (error) {
+      console.error('Error setting identify status:', error)
+    }
   }
 
+  /**
+   * Deactivates the identify function by sending 0 to setIdentify.
+   */
   async unsetIdentify() {
     await this.setIdentify(0)
   }
 
+  /**
+   * Toggles between the two states of setIdentify.
+   */
   async toggleIdentify() {
-    if (this.isIdentified()) {
-      return await this.unsetIdentify()
+    try {
+      if (this.isIdentified()) {
+        await this.unsetIdentify()
+      } else {
+        await this.setIdentify()
+      }
+    } catch (error) {
+      console.error('Error toggling identify status:', error)
     }
-    return await this.setIdentify()
+  }
+
+  /**
+   * Returns the current status of the identify function.
+   * @returns {Boolean} True if identify is active, otherwise false.
+   */
+  isIdentified() {
+    return Number(this._identify.data.IdentifyStatus) > 0
   }
 }
