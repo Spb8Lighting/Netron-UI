@@ -1,13 +1,11 @@
 export const devMode = 'NETRON EN4' // Set to false to go in production mode
 
 /**
- * This table will be used to automatically generate the class.Menu.js (a link without items is a direct link without sub-menu)
- * It also configure the method to be called in class.Page.js
- * If a page has items, then, only the items can have a page
- * Example for: presets with page_presetsNetron (page_ + parent page + items page)
- * Example for: dmxPorts with page_dmxPorts (page_ + parent page)
+ * Configuration for application pages and menu items.
+ * Each entry represents a page or a menu item in the application.
+ * Items with nested entries have sub-menu items.
  * 
- * (ONLY FOLLOWING PARAMETER CAN BE TRANSLATED: name)
+ * Only the 'name' parameter can be translated.
  */
 export const config = {
   home: {
@@ -51,9 +49,9 @@ export const config = {
 }
 
 /**
- * This table contains all wording used in the application
+ * Contains all wording used in the application.
  * 
- * (CAN BE TRANSLATED)
+ * All values can be translated.
  */
 export const word = {
   sACN: 'sACN',
@@ -111,9 +109,9 @@ export const word = {
 }
 
 /**
- * This table provide attribute name, icon and associated description used on form at hover
+ * Provides attribute names, icons, and descriptions used in forms.
  * 
- * (ONLY FOLLOWING PARAMETER CAN BE TRANSLATED: label, desc)
+ * Only the 'label' and 'desc' parameters can be translated.
  */
 export const attr = {
   DeviceType: {
@@ -257,7 +255,7 @@ export const attr = {
 /**
  * This table translate technical value into readable value. It also have associated description display at hover with the mouse
  * 
- * (CAN BE TRANSLATED)
+ * All values can be translated.
  */
 export const translate = {
   inputSource: [
@@ -315,7 +313,7 @@ export const translate = {
 /**
  * This is display value for empty parameter
  * 
- * (CAN BE MODIFIED)
+ * All values can be modified.
  */
 export const emptyAttr = '---'
 

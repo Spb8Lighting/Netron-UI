@@ -33,6 +33,11 @@ export default class Page {
     this.addEvents()
   }
 
+  /**
+   * Sets up event listeners for page changes and content interactions.
+   * - Handles custom page change events and updates the page accordingly.
+   * - Manages interactions with keyboard elements and internal links.
+   */
   addEvents() {
     // Once device is ready, check the page to load
     document.addEventListener(EventName.pageChange, e => {
@@ -69,6 +74,15 @@ export default class Page {
     })
   }
 
+  /**
+   * Displays an alert message by modifying the provided element.
+   * The alert will automatically hide after 2 seconds.
+   *
+   * @param {Object} options - Configuration for the alert.
+   * @param {HTMLElement} options.elem - The element to update with the alert message.
+   * @param {string} options.value - The message to display in the alert.
+   * @param {string} options.type - The type of alert, used for styling (e.g., 'error', 'success').
+   */
   setAlert({ elem, value, type }) {
     const originalText = elem.innerText
     elem.innerText = value
@@ -85,18 +99,37 @@ export default class Page {
     this.#alertTimeOut = setTimeout(() => this.#alert(), 2000)
   }
 
+  /**
+   * Sets the document title and updates the page title element.
+   * Resets any previous state before setting the new title.
+   *
+   * @param {string} title - The new title to set.
+   */
   setTitle(title) {
     this.reset()
     document.title = `${this.#device.setting.DeviceName} - ${title}`
     this.#pageTitle.innerText = title
   }
 
+  /**
+   * Creates an icon element with the specified FontAwesome class.
+   *
+   * @param {string} icon - The FontAwesome icon class (e.g., 'fa-home').
+   * @returns {HTMLElement} The created `<i>` element with the specified icon class.
+   */
   getIcon(icon) {
     const i = document.createElement('i')
     i.className = `fa fa-fw ${icon}`
     return i
   }
 
+  /**
+   * Creates a block title element, either a paragraph or a link, based on the `link` parameter.
+   *
+   * @param {string} value - The text to display in the block title.
+   * @param {string} [link=false] - Optional URL for the link element.
+   * @returns {HTMLElement} The created `<p>` or `<a>` element with the specified text and optional link.
+   */
   getBlockTitle(value, link = false) {
     const p = document.createElement(link ? 'a' : 'p')
     p.className = this.#class.pageTitle + ' w-100'
@@ -107,6 +140,15 @@ export default class Page {
     return p
   }
 
+  /**
+   * Retrieves an attribute value from a line object, applying translation if available.
+   *
+   * @param {Object} options - Configuration for retrieving the attribute value.
+   * @param {Object} options.line - The line object containing attribute values.
+   * @param {string} options.attr - The attribute key to retrieve.
+   * @param {*} [options.directValue] - Optional direct value to return if attribute is not found.
+   * @returns {*} The attribute value, potentially translated, or the direct value if no attribute is found.
+   */
   getAttribute({ line, attr, directValue }) {
     if (this.#translate[attr] !== undefined && typeof this.#translate[attr] === 'function') {
       return this.#translate[attr]({ value: line[attr], line: line })
@@ -203,11 +245,20 @@ export default class Page {
     return table
   }
 
+  /**
+ * Resets the page content and title
+ * Clears the inner text of the page title element and the inner HTML of the page content element
+ */
   reset() {
     this.#pageTitle.innerText = ''
     this.#pageContent.innerHTML = ''
   }
 
+  /**
+   * Creates a summary table for the Netron device with device and DMX port information
+   * 
+   * @returns {HTMLDivElement} The created `<div>` element containing the Netron resume table
+   */
   getNetronResumeTable() {
     const div = document.createElement('div')
     div.className = 'netron-table'
@@ -264,6 +315,12 @@ export default class Page {
     return div
   }
 
+  /**
+   * Fetches and returns a thumbnail image of the device
+   * If the image file is not found, a fallback image is used
+   *
+   * @returns {Promise<HTMLImageElement>} A promise that resolves to the created `<img>` element with the device thumbnail
+   */
   async getDeviceThumbnail() {
     const img = document.createElement('img')
     img.className = 'img-fix-150'
@@ -277,17 +334,49 @@ export default class Page {
       } else {
         img.src = `./assets/img/netron.svg`
       }
-    } catch (error) { }
+    } catch (error) {
+      // Handle error if needed
+    }
 
     return img
   }
 
+  /**
+   * Creates a row container div element
+   * 
+   * @returns {HTMLDivElement} The created `<div>` element with class 'row m-0 p-0'
+   */
   getRow() {
     const div = document.createElement('div')
     div.className = 'row m-0 p-0'
     return div
   }
 
+  /**
+ * Creates an input element based on provided attributes and options
+ * 
+ * @param {Object} params - The parameters for creating the input
+ * @param {string} [params.attr] - Attribute object containing label and description
+ * @param {boolean} [params.disableIndexInLabel] - Whether to disable index in option labels
+ * @param {string} [params.label] - Label text for the input
+ * @param {string} [params.icon] - Icon class to be added to the label
+ * @param {string} [params.id] - ID for the input element
+ * @param {string} [params.name] - Name attribute for the input
+ * @param {string} [params.type] - Type of the input ('input' or 'select')
+ * @param {string} [params.subtype] - Subtype of the input ('text', 'checkbox', etc.)
+ * @param {number} [params.minLength] - Minimum length for text inputs
+ * @param {number} [params.maxLength] - Maximum length for text inputs
+ * @param {number} [params.min] - Minimum value for numeric inputs
+ * @param {number} [params.max] - Maximum value for numeric inputs
+ * @param {string} [params.defaultValue] - Default value for the input
+ * @param {Array<Object>} [params.options] - Options for select inputs
+ * @param {Array<Object>} [params.optgroup] - Option groups for select inputs
+ * @param {boolean} [params.required] - Whether the input is required
+ * @param {boolean} [params.hide] - Options to hide certain inputs
+ * @param {string} [params.specific] - Specific type for additional data attributes
+ * 
+ * @returns {HTMLDivElement} The created `<div>` element containing the input element
+ */
   getInput({ attr, disableIndexInLabel, label, icon, id, name, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
     const div = document.createElement('div')
     div.className = 'input-group'
@@ -312,7 +401,7 @@ export default class Page {
       labelNode.title = attr.desc
     }
 
-    let input = undefined
+    let input
     switch (type) {
       case 'input':
         input = document.createElement('input')
@@ -388,7 +477,6 @@ export default class Page {
               break
           }
 
-          // Specific option to hide other inputs
           if (hide && option.hidden === 1) {
             opt.dataset.hide = JSON.stringify(hide)
           }
@@ -405,7 +493,6 @@ export default class Page {
           input.append(opt)
         })
 
-        // Additional rework to add optgroup
         if (optgroup) {
           for (const group of optgroup) {
             const opt = document.createElement('optgroup')
@@ -430,6 +517,13 @@ export default class Page {
     return div
   }
 
+  /**
+   * Creates a submit button for a form
+   * 
+   * @param {string} action - Text for the button
+   * 
+   * @returns {HTMLButtonElement} The created `<button>` element for form submission
+   */
   getSubmit(action) {
     const button = document.createElement('button')
     button.type = 'submit'
@@ -438,6 +532,16 @@ export default class Page {
     return button
   }
 
+  /**
+   * Creates a form element with an optional label and explanation
+   * 
+   * @param {Object} params - The parameters for creating the form
+   * @param {string} [params.id] - ID for the form element
+   * @param {string} [params.label] - Label text for the form
+   * @param {string} [params.explanation] - Explanation text to be displayed below the label
+   * 
+   * @returns {Object} An object containing the created form and fieldset elements
+   */
   getForm({ id, label, explanation }) {
     const form = document.createElement('form')
     form.className = 'm-0 p-0 mb-5'
@@ -465,6 +569,14 @@ export default class Page {
     return { form: form, fieldset: fieldset }
   }
 
+  /**
+   * Retrieves values from form elements based on a provided list
+   * 
+   * @param {Object} params - The parameters for getting form values
+   * @param {Array<Object>} params.list - List of objects each containing an element and a key for value extraction
+   * 
+   * @returns {Map<string, any>} A map of key-value pairs where keys are form element keys and values are form values
+   */
   getFormValue({ list }) {
     const map = new Map()
     for (const elem of list) {
@@ -478,7 +590,7 @@ export default class Page {
         }
         if (!input.disabled) {
           let value = input.value
-          if (input.type === 'checkbox') { // Rework value for checkbox
+          if (input.type === 'checkbox') {
             value = input.checked ? 1 : 0
           }
           map.set(elem.key, value)
@@ -488,6 +600,18 @@ export default class Page {
     return map
   }
 
+  /**
+   * Handles form submission with validation and data posting
+   * 
+   * @param {Object} params - The parameters for handling form submission
+   * @param {Array<Object>} params.list - List of form elements to be processed
+   * @param {HTMLFormElement} params.form - The form element
+   * @param {HTMLButtonElement} params.button - The submit button element
+   * @param {string} params.url - URL to send the form data
+   * @param {Function} [params.check] - Optional function for additional validation checks
+   * @param {string} [params.success] - Success message to be displayed
+   * @param {Function} [params.callback] - Optional callback function for custom form processing
+   */
   sendForm({ list, form, button, url, check, success, callback }) {
     form.addEventListener('submit', async e => {
       e.preventDefault()
@@ -511,7 +635,7 @@ export default class Page {
 
       formData.append('EndFlag', 1)
 
-      let error = undefined
+      let error
       if (callback && typeof callback === 'function') {
         error = callback(formData)
       }
@@ -527,6 +651,13 @@ export default class Page {
     })
   }
 
+  /**
+ * Disables or enables elements and hides or shows them based on the `disabled` parameter
+ * 
+ * @param {Object} params - The parameters for disabling elements
+ * @param {HTMLElement|HTMLElement[]} params.elem - Element or array of elements to be disabled
+ * @param {boolean} [params.disabled=false] - Whether to disable or enable the elements
+ */
   disabledElem({ elem, disabled = false }) {
     if (Array.isArray(elem)) {
       elem.forEach(el => this.disabledElem({ elem: el, disabled: disabled }))
@@ -547,6 +678,11 @@ export default class Page {
     }
   }
 
+  /**
+   * Handles the display of a 404 page not found error
+   * 
+   * @param {string} pageRequest - The page request that could not be found
+   */
   page_404(pageRequest) {
     this.setTitle(word.page.notFound)
 
@@ -561,6 +697,9 @@ export default class Page {
     this.#pageContent.append(p)
   }
 
+  /**
+   * Displays the home page with device information and optionally DMX input and merge tables
+   */
   async page_home() {
     this.setTitle(word.page.home)
     const div = this.getRow()
@@ -573,7 +712,7 @@ export default class Page {
         attr.DeviceType,
         attr.DeviceName,
         attr.ipaddress,
-        attr.netmask,
+        attr.netmask
       ],
       content: { ...this.#device.setting, ...this.#device.IP }
     })
@@ -638,6 +777,9 @@ export default class Page {
     this.#pageContent.append(divPort)
   }
 
+  /**
+ * Handles the presets page for Netron, including loading and configuring presets
+ */
   page_presetsNetron() {
     this.setTitle(word.page.netronPresets)
 
@@ -685,7 +827,7 @@ export default class Page {
         line: this.#device.presets[0]
       })
     })
- 
+   
     const universeB = this.getInput({
       label: 'Universe B',
       id: 'UniverseB',
@@ -696,7 +838,7 @@ export default class Page {
         line: this.#device.presets[0]
       })
     })
- 
+   
     switch (this.#device.setting.DeviceType) {
       case 'NETRON RDM10':
         form.append(universeA, universeB)
@@ -754,6 +896,9 @@ export default class Page {
     this.sendForm({ list: list, form: form.form, button: button, callback: callback, url: apis.savePresetNetron, success: word.page.netronPresets_LoadSuccess })
   }
 
+  /**
+   * Handles the user presets page, including loading and renaming user presets
+   */
   page_presetsUser() {
     this.setTitle(word.page.userPresets)
 
@@ -765,7 +910,7 @@ export default class Page {
       icon: config.presets.icon,
       type: 'select',
       specific: 'owner',
-      options: this.#device.userPresets,
+      options: this.#device.userPresets
     })
 
     const buttonLoad = this.getSubmit(word.page.userPresets_LoadSubmit)
@@ -780,7 +925,7 @@ export default class Page {
       icon: config.presets.icon,
       type: 'select',
       specific: 'name',
-      options: this.#device.userPresets,
+      options: this.#device.userPresets
     })
 
     const PresetName = this.getInput({
@@ -816,7 +961,7 @@ export default class Page {
     ]
     this.sendForm({ list: list, form: formLoad.form, button: buttonLoad, url: apis.loadPresetNetron, success: word.page.userPresets_LoadSuccess })
 
-    const callback = (formData) => {
+    const callback = formData => {
       const updatedID = Number(formData.get('idx')) - 101
       const newName = formData.get('name')
       this.#device.userPresets[updatedID].name = newName
@@ -836,7 +981,18 @@ export default class Page {
     this.sendForm({ list: listRename, form: formUser.form, button: buttonRename, url: apis.savePresetNetron, callback: callback, success: word.page.userPresets_RenameSuccess })
   }
 
+  /**
+ * Generates and displays a page of DMX port settings
+ * This method creates tabs for each DMX port, allowing the user to configure various settings
+ */
   page_dmxPorts() {
+    /**
+     * Gets the appropriate icon class for a given port based on its mode
+     * @param {Object} params - The parameters for determining the port icon
+     * @param {Object} params.port - The port object
+     * @param {number} params.portID - The ID of the port
+     * @returns {string} The Font Awesome icon class for the port
+     */
     const getPortIcon = ({ port, portID }) => {
       let icon = undefined
       switch (port.ptMode) {
@@ -846,7 +1002,7 @@ export default class Page {
         case 1: // Input
           icon = 'fa-arrow-right-to-bracket'
           break
-        case 2: // Ouput
+        case 2: // Output
           icon = 'fa-arrow-right-from-bracket'
           break
         case 3: // Send value
@@ -901,7 +1057,6 @@ export default class Page {
       li.append(link)
 
       // Generate Pane
-
       const form = this.getForm({ id: link.dataset.bsTarget.substring(1) })
       form.form.className = 'tab-pane fade pt-2'
       if (i === 0) {
@@ -917,6 +1072,13 @@ export default class Page {
       /** Settings */
       const PortSettingsTitle = this.getBlockTitle(word.page.dmxPorts_Setting)
 
+      /**
+       * Creates a select input for port cloning options
+       * @param {number} a - The current port index
+       * @param {string} formid - The form ID
+       * @param {number} ptClonePort - The current clone port value
+       * @returns {HTMLElement} The select input element for cloning options
+       */
       const getPtClonePortInput = (a, formid, ptClonePort) => {
         return this.getInput({
           attr: attr.ptClonePort,
@@ -947,7 +1109,7 @@ export default class Page {
         defaultValue: port.ptRDM === 1
       })
 
-      /** Input/Ouput */
+      /** Input/Output */
       const InputOuputTitle = this.getBlockTitle(word.page.dmxPorts_InOut)
       InputOuputTitle.classList.add('mt-2')
 
@@ -1085,6 +1247,9 @@ export default class Page {
 
       form.fieldset.append(...allInputs, button)
 
+      /**
+       * Sets default values for various inputs
+       */
       const defaultValues = () => {
         ptRDM.children[1].firstChild.checked = true
         ptProtocol.children[1].value = 0
@@ -1113,6 +1278,10 @@ export default class Page {
       ptMergeMode.addEventListener('change', e => updateVisibilityAndValues())
       ptResendProtocol.addEventListener('change', e => updateVisibilityAndValues())
 
+      /**
+       * The list of inputs for the form data
+       * @type {Array<Object>}
+       */
       const list = [
         { key: 'idx', directValue: form.form.dataset.idx },
         { key: 'ptClonePort', elem: ptClonePort },
@@ -1131,8 +1300,13 @@ export default class Page {
         { key: 'ptOffsetAddr', elem: ptOffsetAddr }
       ]
 
+      /**
+       * Handles the form submission callback
+       * @param {FormData} formData - The form data to process
+       * @returns {string|false} Error message if there is an error, otherwise false
+       */
       const callback = formData => {
-        /* Manage Errors */
+        // Manage Errors
         let error = false
         // Check if the ptMode change is not breaking other ports
         if (Number(formData.get('ptMode')) !== 2) { // !Output
@@ -1182,6 +1356,10 @@ export default class Page {
         return false
       }
 
+      /**
+       * Checks the validity of input values and returns error messages if needed
+       * @returns {string|false} Error message if there is an error, otherwise false
+       */
       const check = () => {
         if (ptMode.children[1].value !== 0) { // !Disable
           const values = {
@@ -1199,6 +1377,9 @@ export default class Page {
 
       this.sendForm({ list: list, form: form.form, button: button, url: apis.saveDMXPort, check: check, callback: callback, success: word.page.dmxPorts_SubmitSuccess })
 
+      /**
+       * Updates the visibility and enabled/disabled state of form inputs based on the current mode
+       */
       const updateVisibilityAndValues = () => {
         this.disabledElem({ elem: allInputs, disabled: true })
         switch (Number(ptMode.children[1].value)) {
@@ -1253,12 +1434,21 @@ export default class Page {
             break
         }
       }
+
       updateVisibilityAndValues()
     })
     this.#pageContent.append(ul, div)
   }
+
+  /**
+ * Asynchronously generates and displays the system status page
+ * This method sets the page title, creates and displays device information,
+ * IP address details, and firmware version information
+ */
   async page_systemStatus() {
     this.setTitle(word.page.status)
+
+    // Create a row for device information
     const div = this.getRow()
 
     const deviceTitle = this.getBlockTitle(word.page.status_Device)
@@ -1279,6 +1469,7 @@ export default class Page {
 
     div.append(deviceTitle, await this.getDeviceThumbnail(), deviceTable)
 
+    // Create a row for IP address details
     const divIP = this.getRow()
 
     const IPAddressTitle = this.getBlockTitle(word.page.status_IPAddress, `./?ipSettings`)
@@ -1295,6 +1486,7 @@ export default class Page {
 
     divIP.append(IPAddressTitle, IPAddressTable)
 
+    // Create a row for firmware version information
     const divFirmware = this.getRow()
 
     const FirmwareTitle = this.getBlockTitle(word.page.status_SoftVersion, `./?systemMaintenance`)
@@ -1311,7 +1503,7 @@ export default class Page {
 
     divFirmware.append(FirmwareTitle, FirmwareTable)
 
-
+    // Append all rows to the page content
     this.#pageContent.append(div, divIP, divFirmware)
   }
 }
