@@ -264,7 +264,7 @@ export default class Page {
    */
   getNetronResumeTable() {
     const div = document.createElement('div')
-    div.className = 'netron-table'
+    div.className = 'netron-table ms-auto me-auto'
 
     const pName = document.createElement('p')
     pName.className = 'text-center p-0 m-0'
@@ -326,7 +326,7 @@ export default class Page {
    */
   async getDeviceThumbnail() {
     const img = document.createElement('img')
-    img.className = 'img-fix-150'
+    img.className = 'img-fix-150 ms-auto me-auto'
     img.width = '150'
     img.height = '150'
 
@@ -720,7 +720,7 @@ export default class Page {
       content: { ...this.#device.setting, ...this.#device.IP }
     })
 
-    infosTable.classList.add('col')
+    infosTable.classList.add('col-sm')
 
     div.append(infosTitle, await this.getDeviceThumbnail(), infosTable)
 
@@ -771,7 +771,7 @@ export default class Page {
       content: this.#device.dmxPorts
     })
 
-    DMXPortsTable.classList.add('col')
+    DMXPortsTable.classList.add('col-sm')
 
     const divPort = this.getRow()
 
@@ -1468,7 +1468,7 @@ export default class Page {
       content: { ...this.#device.setting, ...this.#device.index }
     })
 
-    deviceTable.classList.add('col')
+    deviceTable.classList.add('col-sm')
 
     div.append(deviceTitle, await this.getDeviceThumbnail(), deviceTable)
 

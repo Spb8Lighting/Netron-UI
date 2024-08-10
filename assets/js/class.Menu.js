@@ -47,7 +47,7 @@ export default class Menu {
    */
   #createHomeLink() {
     const a = document.createElement('a')
-    a.className = 'm-0 p-0 bg-secondary-subtle'
+    a.className = 'm-0 p-0 d-none d-sm-block bg-secondary-subtle'
     a.href = './'
 
     const span = document.createElement('span')
@@ -239,87 +239,172 @@ export default class Menu {
   }
 
   /**
-   * Adds event listeners for menu interactions and updates.
+   * Toggles the 'compact' class on the HTML element.
+   * If the 'compact' class is present, it will be removed by calling `disableCompactMode`.
+   * If the 'compact' class is not present, it will be added by calling `enableCompactMode`.
+   * This function is used to toggle a compact mode for a menu or interface.
    */
-  #addEvents() {
-    // Once device is ready, set-up the createIdentify
-    document.addEventListener(this.#EventName.deviceReady, e => {
-      this.#menu.append(this.#createIdentify())
+  #toggleMenuCompact() {
+    const html = this.#getHtmlElement()
 
-      // Remove link not relative to current device
-      const lis = this.#menu.querySelectorAll('li[data-restricted]')
-      lis.forEach(li => {
-        const restricted = JSON.parse(li.dataset.restricted)
-        if (restricted.indexOf(this.#device.setting.DeviceType) === -1) {
-          li.remove()
-        }
-      })
+    if (html.classList.contains('compact')) {
+      this.#disableCompactMode()
+    } else {
+      this.#enableCompactMode()
+    }
+  }
+
+  /**
+   * Disables the compact mode by removing the 'compact' class from the HTML element.
+   * It also removes the 'collapse' item from local storage, indicating that
+   * the menu or interface is no longer in compact mode.
+   */
+  #disableCompactMode() {
+    const html = this.#getHtmlElement()
+
+    if (!html.classList.contains('compact')) return // Exit if compact mode is already disabled
+
+    localStorage.removeItem('collapse')
+    html.classList.remove('compact')
+  }
+
+  /**
+   * Enables the compact mode by adding the 'compact' class to the HTML element.
+   * It also sets a 'collapse' item in local storage to indicate that the
+   * menu or interface is in compact mode.
+   */
+  #enableCompactMode() {
+    const html = this.#getHtmlElement()
+
+    if (html.classList.contains('compact')) return // Exit if compact mode is already enabled
+
+    localStorage.setItem('collapse', true)
+    html.classList.add('compact')
+    this.hideAllSubMenu()
+  }
+
+  /**
+   * Helper function to retrieve the root HTML element.
+   * This function centralizes access to the document element for easier maintenance.
+   * 
+   * @returns {HTMLElement} The root HTML element of the document.
+   */
+  #getHtmlElement() {
+    return document.documentElement
+  }
+
+
+  /**
+ * Adds event listeners for menu interactions and updates.
+ */
+  #addEvents() {
+    document.addEventListener(this.#EventName.deviceReady, e => {
+      this.#handleDeviceReady()
     })
 
-    // Manage identify feature
     document.addEventListener(this.#EventName.identifyIsOn, e => {
       this.#identify.checked = true
     })
 
     this.#identify.addEventListener('change', e => {
       e.preventDefault()
-      if (this.#identify.checked) {
-        this.#device.setIdentify()
-      } else {
-        this.#device.unsetIdentify()
-      }
+      this.#toggleIdentify()
     })
 
-    // Manage page navigation
     this.#menu.addEventListener('click', e => {
-      let target = e.target
-      let nodeName = target.nodeName.toLowerCase()
-
-      if (nodeName !== 'input') { e.preventDefault() } // Block the event except for identify switcher
-      if (nodeName === 'i') {
-        target = target.parentNode
-        nodeName = target.nodeName.toLowerCase()
-      }
-      if (nodeName === 'a') {
-        if (target.parentNode.childElementCount > 1) {
-          this.resetActiveLink()
-          target.classList.add('active')
-        } else {
-          const isSubMenu = target?.parentNode?.parentNode?.parentNode?.firstChild
-          if (this.#latestActive) { this.#latestActive.classList.remove('active') }
-          if (document.documentElement.classList.contains('compact')) { this.hideAllSubMenu() }
-          
-          window.history.replaceState(null, null, target.search !== '?home' ? target.search : './')
-
-          if (isSubMenu && isSubMenu.nodeName.toLowerCase() === 'a') {
-            this.#latestActive = target.parentNode
-          } else {
-            this.resetActiveLink()
-            this.#latestActive = target
-          }
-          this.#latestActive.classList.add('active')
-          this.#pageChange.detail = target.search.substring(1)
-          document.dispatchEvent(this.#pageChange)
-        }
-      }
+      this.#handleMenuClick(e)
     })
 
-    // Manage menu compact mode
     this.#input.addEventListener('click', e => {
       e.preventDefault()
-      const html = document.documentElement
-      if (html.classList.contains('compact')) {
-        localStorage.removeItem('collapse')
-        html.classList.remove('compact')
-      } else {
-        localStorage.setItem('collapse', true)
-        html.classList.add('compact')
-        this.hideAllSubMenu()
-      }
+      this.#toggleMenuCompact()
     })
 
     if (localStorage.getItem('collapse')) {
-      document.documentElement.classList.add('compact')
+      this.#enableCompactMode()
     }
   }
+
+  /**
+  * Handles the device ready event by appending identify and removing non-relevant links.
+  */
+  #handleDeviceReady() {
+    this.#menu.append(this.#createIdentify())
+    const lis = this.#menu.querySelectorAll('li[data-restricted]')
+    lis.forEach(li => {
+      const restricted = JSON.parse(li.dataset.restricted)
+      if (restricted.indexOf(this.#device.setting.DeviceType) === -1) {
+        li.remove()
+      }
+    })
+  }
+
+  /**
+  * Toggles the identify feature on or off based on the checkbox state.
+  */
+  #toggleIdentify() {
+    if (this.#identify.checked) {
+      this.#device.setIdentify()
+    } else {
+      this.#device.unsetIdentify()
+    }
+  }
+
+  /**
+  * Handles menu clicks, managing active links and navigation.
+  * @param {Event} e - The click event.
+  */
+  #handleMenuClick(e) {
+    let target = e.target
+    const breakpoint = window.getComputedStyle(document.body, ':before').content.replace(/\"/g, '')
+    let nodeName = target.nodeName.toLowerCase()
+
+    if (nodeName !== 'input') {
+      e.preventDefault()
+    }
+    if (nodeName === 'i') {
+      target = target.parentNode
+      nodeName = target.nodeName.toLowerCase()
+    }
+    if (nodeName === 'a') {
+      this.#handleLinkClick(target, breakpoint)
+    }
+  }
+
+  /**
+  * Handles link clicks, updating active states and navigation.
+  * @param {HTMLElement} target - The clicked link element.
+  * @param {string} breakpoint - The current breakpoint for responsive design.
+  */
+  #handleLinkClick(target, breakpoint) {
+    const html = this.#getHtmlElement()
+    if (target.parentNode.childElementCount > 1) {
+      this.resetActiveLink()
+      target.classList.add('active')
+    } else {
+      const isSubMenu = target?.parentNode?.parentNode?.parentNode?.firstChild
+      if (this.#latestActive) {
+        this.#latestActive.classList.remove('active')
+      }
+      if (html.classList.contains('compact')) {
+        this.hideAllSubMenu()
+      }
+
+      window.history.replaceState(null, null, target.search !== '?home' ? target.search : './')
+
+      if (isSubMenu && isSubMenu.nodeName.toLowerCase() === 'a') {
+        this.#latestActive = target.parentNode
+      } else {
+        this.resetActiveLink()
+        this.#latestActive = target
+      }
+      this.#latestActive.classList.add('active')
+      this.#pageChange.detail = target.search.substring(1)
+      if (breakpoint === 'sm') {
+        html.classList.add('compact')
+      }
+      document.dispatchEvent(this.#pageChange)
+    }
+  }
+
 }

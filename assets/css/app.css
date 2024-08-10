@@ -1,3 +1,9 @@
+body:before {
+  content: '';
+  display: none;
+  visibility: hidden;
+}
+
 a:has(#logo) {
   width: 230px;
   transition: width .35s ease
@@ -50,7 +56,7 @@ body>div,
 
 /* Form */
 #page-content>form:last-child {
-  margin-bottom: 0!important;
+  margin-bottom: 0 !important;
 }
 
 /* Alerts */
@@ -324,4 +330,39 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
 
 [data-bs-theme=dark] #root .simple-keyboard+.simple-keyboard-preview {
   background: #1c4995;
+}
+
+@media (max-width: 576px) {
+  body:before {
+    content: 'sm'
+  }
+
+  #main-menu {
+    width: 100% !important;
+    overflow-y: auto;
+  }
+
+  .compact #main-menu {
+    width: 0px !important;
+    opacity: 0;
+    z-index: -100;
+  }
+
+  #pageTitle {
+    font-size: 1.2rem !important;
+  }
+
+  #themeSwitcher .form-switch {
+    font-size: .8rem !important;
+  }
+
+  #pageContent .nav-link {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+
+  /* Keyboard */
+  .hg-theme-default .hg-button.hg-standardBtn {
+    width: 1.8rem;
+  }
 }
