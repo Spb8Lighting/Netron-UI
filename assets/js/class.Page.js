@@ -1,6 +1,6 @@
 import MobileKeyboard from 'MobileKeyboard'
 import Translate from 'Translate'
-import { EventName, config, attr, word, apis, translate } from 'config'
+import { EventName, config, attr, word, apis } from 'config'
 
 export default class Page {
 
