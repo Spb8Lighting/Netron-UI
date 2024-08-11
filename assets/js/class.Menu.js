@@ -47,7 +47,7 @@ export default class Menu {
    */
   #createHomeLink() {
     const a = document.createElement('a')
-    a.className = 'm-0 p-0 d-none d-sm-block bg-secondary-subtle'
+    a.className = 'm-0 p-0 bg-secondary-subtle'
     a.href = './'
 
     const span = document.createElement('span')

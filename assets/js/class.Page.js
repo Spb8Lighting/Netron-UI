@@ -173,7 +173,7 @@ export default class Page {
         const tr = document.createElement('tr')
         const tdLabel = document.createElement('td')
         tdLabel.innerText = head.label
-        tdLabel.className = 'w-auto'
+        tdLabel.className = 'w-50'
         if (head?.icon) {
           tdLabel.prepend(this.getIcon(head.icon))
         }
@@ -682,6 +682,30 @@ export default class Page {
   }
 
   /**
+   * Gets the appropriate icon class for a given port based on its mode
+   * @param {Object} params - The parameters for determining the port icon
+   * @param {Object} params.port - The port object
+   * @param {number} params.portID - The ID of the port
+   * @returns {string} The Font Awesome icon class for the port
+   */
+  #getPortIcon({ port, portID }) {
+    const iconMap = {
+      0: 'fa-ban', // Disable
+      1: 'fa-arrow-right-to-bracket', // Input
+      2: 'fa-arrow-right-from-bracket', // Output
+      3: 'fa-volume-high', // Send value
+    }
+
+    let icon = iconMap[port.ptMode] || 'fa-ban' // Default to 'Disable' icon
+
+    if (this.#translate.isClonedPort({ portID, port })) {
+      icon = 'fa-clone'
+    }
+
+    return `fa fa-fw ${icon}`
+  }
+
+  /**
    * Handles the display of a 404 page not found error
    * 
    * @param {string} pageRequest - The page request that could not be found
@@ -989,33 +1013,40 @@ export default class Page {
  * This method creates tabs for each DMX port, allowing the user to configure various settings
  */
   page_dmxPorts() {
-    /**
-     * Gets the appropriate icon class for a given port based on its mode
-     * @param {Object} params - The parameters for determining the port icon
-     * @param {Object} params.port - The port object
-     * @param {number} params.portID - The ID of the port
-     * @returns {string} The Font Awesome icon class for the port
-     */
-    const getPortIcon = ({ port, portID }) => {
-      let icon = undefined
-      switch (port.ptMode) {
-        case 0: // Disable
-          icon = 'fa-ban'
-          break
-        case 1: // Input
-          icon = 'fa-arrow-right-to-bracket'
-          break
-        case 2: // Output
-          icon = 'fa-arrow-right-from-bracket'
-          break
-        case 3: // Send value
-          icon = 'fa-volume-high'
-          break
-      }
-      if (this.#translate.isClonedPort({ portID: portID, port: port })) {
-        icon = 'fa-clone'
-      }
-      return `fa fa-fw ${icon}`
+    // Helper function to create a tab
+    const createTab = ({ port, index }) => {
+      const li = document.createElement('li')
+      li.className = 'nav-item'
+      li.role = 'presentation'
+
+      const portIcon = document.createElement('i')
+      portIcon.className = this.#getPortIcon({ port: port, portID: index })
+
+      const link = document.createElement('button')
+      link.type = 'button'
+      link.className = `nav-link${index === 0 ? ' active' : ''}`
+      link.role = 'tab'
+      link.dataset.bsToggle = 'tab'
+      link.dataset.bsTarget = `#dmxPort${index}`
+      link.ariaControls = link.dataset.bsTarget
+      link.innerText = this.#translate.replaceText({ text: word.page.dmxPorts_Tab, search: { '%1': index + 1 } })
+      link.id = `dmxPort${index}-tab`
+
+      link.prepend(portIcon)
+      li.append(link)
+
+      return { li, link, portIcon }
+    }
+    // Helper function to create a form
+    const createForm = ({ port, index, formID }) => {
+      const form = this.getForm({ id: formID })
+      form.form.className = `tab-pane fade pt-2${index === 0 ? ' show active' : ''}`
+      form.form.dataset.idx = index + 1
+      form.form.role = 'tabpanel'
+      form.form.tabIndex = 0
+      form.form.ariaLabelledby = formID
+
+      return form
     }
 
     this.setTitle(word.page.dmxPorts)
@@ -1033,43 +1064,13 @@ export default class Page {
 
     this.#device.dmxPorts.forEach((port, i) => {
       // Generate Tab for navigation
-      const li = document.createElement('li')
-      li.className = 'nav-item'
-      li.role = 'presentation'
-
+      const { li, link, portIcon } = createTab({ port: port, index: i })
       ul.append(li)
 
-      nodes.portIcon[i] = document.createElement('i')
-      nodes.portIcon[i].className = getPortIcon({ port: port, portID: i })
-
-      const link = document.createElement('button')
-      link.type = 'button'
-      link.className = 'nav-link'
-      if (i === 0) {
-        link.classList.add('active')
-      }
-      link.role = 'tab'
-      link.dataset.bsToggle = 'tab'
-      link.dataset.bsTarget = `#dmxPort${i}`
-      link.ariaControls = link.dataset.bsTarget
-      link.innerText = this.#translate.replaceText({ text: word.page.dmxPorts_Tab, search: { '%1': i + 1 } })
-      link.id = `dmxPort${i}-tab`
-
-      link.prepend(nodes.portIcon[i])
-
-      li.append(link)
+      nodes.portIcon[i] = portIcon
 
       // Generate Pane
-      const form = this.getForm({ id: link.dataset.bsTarget.substring(1) })
-      form.form.className = 'tab-pane fade pt-2'
-      if (i === 0) {
-        form.form.classList.add('show', 'active')
-      }
-      form.form.dataset.idx = i + 1
-      form.form.role = 'tabpanel'
-      form.form.tabIndex = 0
-      form.form.ariaLabelledby = link.id
-
+      const form = createForm({ port: port, index: i, formID: link.dataset.bsTarget.substring(1) })
       div.append(form.form)
 
       /** Settings */
@@ -1109,7 +1110,7 @@ export default class Page {
         id: `${form.form.id}ptRDM`,
         type: 'input',
         subtype: 'checkbox',
-        defaultValue: port.ptRDM === 1
+        defaultValue: (port.ptRDM === 1)
       })
 
       /** Input/Output */
@@ -1266,20 +1267,28 @@ export default class Page {
         ptOffsetAddr.children[1].value = 0
       }
 
-      ptClonePort.addEventListener('change', e => {
-        const value = Number(e.target.value)
-        if (value === i) {
-          defaultValues()
+      form.form.addEventListener('change', e => {
+        switch (e.target.name) {
+          case 'ptClonePort':
+            const value = Number(e.target.value)
+            if (value === i) {
+              defaultValues()
+            }
+            updateVisibilityAndValues()
+            break
+          case 'ptMode':
+            defaultValues()
+            updateVisibilityAndValues()
+            break
+          case 'ptProtocol':
+          case 'ptMergeMode':
+          case 'ptResendProtocol':
+            updateVisibilityAndValues()
+            break
+          default:
+            break
         }
-        updateVisibilityAndValues()
       })
-      ptMode.addEventListener('change', e => {
-        defaultValues()
-        updateVisibilityAndValues()
-      })
-      ptProtocol.addEventListener('change', e => updateVisibilityAndValues())
-      ptMergeMode.addEventListener('change', e => updateVisibilityAndValues())
-      ptResendProtocol.addEventListener('change', e => updateVisibilityAndValues())
 
       /**
        * The list of inputs for the form data
@@ -1327,16 +1336,15 @@ export default class Page {
           }
         }
 
-        if (error) {
-          return error
-        }
+        if (error) { return error }
+
         for (const [key, val] of formData.entries()) {
           if (key !== 'idx') { // Do not try to update non existing thing
             this.#device.dmxPorts[i][key] = Number(val)
           }
         }
 
-        nodes.portIcon[i].className = getPortIcon({ port: port, portID: i }) // Update Port Icon
+        nodes.portIcon[i].className = this.#getPortIcon({ port: port, portID: i }) // Update Port Icon
 
         this.#pageContent.querySelectorAll('form').forEach((form, index) => { // Update ptClonePort options description everywhere
           const subPtClonePort = form.querySelector(`#${form.id}ptClonePort`)
