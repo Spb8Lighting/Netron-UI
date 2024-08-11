@@ -25,7 +25,6 @@ context('Main menu', () => {
     it('expand the first sub-menu', () => {
       cy.get('@linkSubMenu').should('not.have.class', 'active')
       cy.get('@linkSubMenu').click()
-      cy.wait(360)
 
       cy.get('@linkSubMenu').should('have.class', 'active')
       cy.get('@linkSubMenuSub').should('be.visible')
@@ -40,15 +39,12 @@ context('Main menu', () => {
       cy.get('@linkSubMenuSub').should('be.visible')
 
       cy.get('@linkSubMenu').click()
-      cy.wait(360)
 
       cy.get('@linkSubMenuSub').should('not.be.visible')
 
       cy.get('@linkSubMenu').click()
-      cy.wait(360)
 
       cy.get('@linkSubMenu2').click()
-      cy.wait(360)
 
       cy.get('@linkSubMenu').should('not.have.class', 'active')
       cy.get('@linkSubMenu2').should('have.class', 'active')
@@ -78,7 +74,6 @@ context('Main menu', () => {
 
       cy.get('@menuToggle').click()
       cy.get('html').should('have.class', 'compact')
-      cy.wait(360)
       cy.get('@linkSubMenuSub').should('not.be.visible')
 
       cy.get('@menuToggle').click()
@@ -89,7 +84,6 @@ context('Main menu', () => {
     it('load every pages', () => {
       cy.get('#main-menu a').each(($elem) => {
         cy.wrap($elem).click()
-        cy.wait(360)
       })
     })
   })
@@ -245,8 +239,6 @@ context('Check pages', () => {
         }
       })
 
-      cy.wait(2001)
-
       cy.get('@preset').select(7)  // SACN Preset
 
       cy.checkMinMax({
@@ -346,8 +338,6 @@ context('Check pages', () => {
         }
       })
 
-      cy.wait(2001)
-
       cy.get('@LoadPreset').select(0)
       cy.get('@LoadSubmit').click()
 
@@ -396,6 +386,7 @@ context('Check pages', () => {
       cy.get('@LoadPreset').find(':selected').should('have.text', '1: Preset 1')
     })
   })
+  
   describe('DMX ports', () => {
     it('access the page, check its default content and check API calls', () => {
       const inputList = ['ptClonePort', 'ptMode', 'ptRDM', 'ptProtocol', 'ptUniverse', 'ptMergeMode', 'ptMergeUniverse', 'ptResendProtocol', 'ptResendUniverse', 'ptSendValue', 'ptFramerate', 'ptRangeFrom', 'ptRangeTo', 'ptOffsetAddr']
@@ -454,8 +445,6 @@ context('Check pages', () => {
                 EndFlag: '1'
               }
             })
-
-            cy.wait(2001)
           }
         })
 
@@ -479,7 +468,6 @@ context('Check pages', () => {
           EndFlag: '1'
         }
       })
-      cy.wait(2001)
       // All DMX port are disabled
       const visibleInput = new Set(['ptMode', 'ptProtocol', 'ptUniverse', 'ptRangeFrom', 'ptRangeTo', 'ptOffsetAddr'])
       const hiddenInput = inputList.filter(name => !visibleInput.has(name))
@@ -560,8 +548,6 @@ context('Check pages', () => {
             value: 0
           })
 
-          cy.wait(2001)
-
           cy.get(`@port${index}-Submit`).click()
 
           cy.checkRequest({
@@ -577,8 +563,6 @@ context('Check pages', () => {
               EndFlag: '1'
             }
           })
-
-          cy.wait(2001)
 
           cy.get(`@port${index}-ptMode`).select(2) // Output
 
@@ -652,8 +636,6 @@ context('Check pages', () => {
             }
           })
 
-          cy.wait(2001)
-
           cy.get(`@port${index}-ptProtocol`).select(1) // sACN
 
           cy.get(`@port${index}-ptRDM`).uncheck()
@@ -677,8 +659,6 @@ context('Check pages', () => {
               EndFlag: '1'
             }
           })
-
-          cy.wait(2001)
         })
 
     })

@@ -98,7 +98,7 @@ export const word = {
     dmxPorts_ClonePort_PortIsCloningDistant_desc: 'The port %1 is cloning the Port %2 (dependancy loop)', // %1 = port ID distant, %2 = port ID distant
     dmxPorts_ClonePort_PortIsCloningLocal: '🛇 Port %1 clones: Port %2', // %1 = port ID distant, %2 = port ID local
     dmxPorts_ClonePort_PortIsCloningLocal_desc: 'The port %1 is cloning the current Port %2 (dependancy loop)', // %1 = port ID distant, %2 = port ID local
-    dmxPorts_SubmitSuccess: 'Port updated successfully!',
+    dmxPorts_SubmitSuccess: 'Port %1 updated successfully!', // %1 = port ID
     dmxPorts_Submit_Error_Clone: 'Port %1 is cloned by Port%2: %3', // %1 = port ID, %2 = plurial if several port are using this port, %3 is the list of port cloning current port
     status: 'Status',
     status_Device: 'Device',

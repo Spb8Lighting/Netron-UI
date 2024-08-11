@@ -9,6 +9,7 @@ export default class Page {
   #alert = undefined
   #menu = undefined
   #translate = undefined
+  #alertFn = {}
 
   #keyboard = undefined
 
@@ -16,7 +17,7 @@ export default class Page {
     pageTitle: 'fs-6 me-0 ms-0 mt-0 mb-2 pe-0 ps-0 pt-0 pb-2 border-bottom border-primary border-2 fw-bold'
   }
 
-  #alertTimeOut = undefined
+  #alertTimeOut = {}
 
   #pageTitle = document.getElementById('pageTitle')
   #pageContent = document.getElementById('pageContent')
@@ -31,6 +32,18 @@ export default class Page {
     this.#keyboard = new MobileKeyboard()
 
     this.addEvents()
+  }
+
+  #getAlertNode(value) {
+    const alert = document.createElement('aside')
+    alert.className = 'm-1 p-2 alert fade hide'
+    alert.role = 'alert'
+    alert.ariaRole = 'Form feedback'
+    alert.innerText = value
+
+    this.#alert.append(alert)
+
+    return alert
   }
 
   /**
@@ -86,21 +99,21 @@ export default class Page {
    * @param {string} options.value - The message to display in the alert.
    * @param {string} options.type - The type of alert, used for styling (e.g., 'error', 'success').
    */
-  setAlert({ elem, value, type }) {
-    const originalText = elem.innerText
-    elem.innerText = value
-    if (!elem.classList.contains('show')) {
-      elem.classList.add('show', 'fade', `btn-${type}`)
-      elem.type = 'button'
+  setAlert({ elem, value, type, id }) {
+    const alert = this.#getAlertNode(value)
+    alert.classList.add('show', `alert-${type}`)
+    elem.disabled = true
+
+    this.#alertFn[id] = () => {
+      clearTimeout(this.#alertTimeOut[id])
+      alert.remove()
+      elem.disabled = false
     }
-    this.#alert = () => {
-      clearTimeout(this.#alertTimeOut)
-      elem.classList.remove('show', 'fade', `btn-${type}`)
-      elem.innerText = originalText
-      elem.type = 'submit'
-    }
-    this.#alertTimeOut = setTimeout(() => this.#alert(), 2000)
+
+    this.#alertTimeOut[id] = setTimeout(() => this.#alertFn[id](), 2000)
   }
+
+
 
   /**
    * Sets the document title and updates the page title element.
@@ -548,7 +561,7 @@ export default class Page {
   getForm({ id, label, explanation }) {
     const form = document.createElement('form')
     form.className = 'm-0 p-0 mb-5'
-    if (id) { form.id = id }
+    form.id = id ? id : `id-${Date.now()}`
 
     const fieldset = document.createElement('fieldset')
     fieldset.className = 'form-group'
@@ -650,7 +663,11 @@ export default class Page {
         await this.#fetch.post({ url: url, formData: formData })
       }
 
-      this.setAlert({ elem: button, value: error ? error : success, type: error ? 'danger' : 'success' })
+      const id = button.parentNode.parentNode.id
+
+      const alertOption = { id: id, elem: button, value: error ? error : success, type: error ? 'danger' : 'success' }
+
+      this.setAlert(alertOption)
     })
   }
 
@@ -1386,7 +1403,18 @@ export default class Page {
         }
       }
 
-      this.sendForm({ list: list, form: form.form, button: button, url: apis.saveDMXPort, check: check, callback: callback, success: word.page.dmxPorts_SubmitSuccess })
+      this.sendForm({
+        list: list,
+        form: form.form,
+        button: button,
+        url: apis.saveDMXPort,
+        check: check,
+        callback: callback,
+        success: this.#translate.replaceText({
+          text: word.page.dmxPorts_SubmitSuccess,
+          search: { '%1': i + 1 }
+        })
+      })
 
       /**
        * Updates the visibility and enabled/disabled state of form inputs based on the current mode

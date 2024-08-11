@@ -60,26 +60,30 @@ body>div,
 }
 
 /* Alerts */
-.btn {
+#alert {
+  z-index: 500;
+}
+.btn,
+.alert {
   transition: all 0.3s ease;
 }
 
-.btn.fade::before {
+.alert::before {
   font-family: var(--fa-style-family, 'Font Awesome 6 Free');
   font-weight: var(--fa-style, 900);
   float: left;
   margin-right: .75rem;
 }
 
-.btn-success::before {
+.alert-success::before {
   content: '\f058';
 }
 
-.btn-danger::before {
+.alert-danger::before {
   content: '\f06a';
 }
 
-.btn-warning::before {
+.alert-warning::before {
   content: '\f071';
 }
 
