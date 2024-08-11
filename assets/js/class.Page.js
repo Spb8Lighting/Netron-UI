@@ -11,6 +11,8 @@ export default class Page {
   #translate = undefined
   #alertFn = {}
 
+  #devMode = undefined
+
   #keyboard = undefined
 
   #class = {
@@ -22,7 +24,8 @@ export default class Page {
   #pageTitle = document.getElementById('pageTitle')
   #pageContent = document.getElementById('pageContent')
 
-  constructor({ _DEVICE_, _FETCH_, _ALERT_, _MENU_ }) {
+  constructor({ _DEVICE_, _FETCH_, _ALERT_, _MENU_, devMode }) {
+    this.#devMode = devMode
     this.#device = _DEVICE_
     this.#fetch = _FETCH_
     this.#alert = _ALERT_
@@ -627,8 +630,9 @@ export default class Page {
    * @param {Function} [params.check] - Optional function for additional validation checks
    * @param {string} [params.success] - Success message to be displayed
    * @param {Function} [params.callback] - Optional callback function for custom form processing
+   * @param {Function} [params.after] - Optional after function for custom processing of answer
    */
-  sendForm({ list, form, button, url, check, success, callback }) {
+  sendForm({ list, form, button, url, check, success, callback, after }) {
     form.addEventListener('submit', async e => {
       e.preventDefault()
       this.#keyboard.hide()
@@ -660,7 +664,10 @@ export default class Page {
       }
 
       if (!error) {
-        await this.#fetch.post({ url: url, formData: formData })
+        const response = await this.#fetch.post({ url: url, formData: formData })
+        if (after && typeof after === 'function') {
+          after(response)
+        }
       }
 
       const id = button.parentNode.parentNode.id
@@ -1478,6 +1485,155 @@ export default class Page {
     })
     this.#pageContent.append(ul, div)
   }
+
+  /**
+ * Initializes and renders the IP settings page.
+ * Sets up the form with fields for IP settings, including address mode, IP address, and netmask.
+ * Handles the visibility of fields based on the selected address mode and validates the input.
+ */
+  page_ipSettings() {
+    this.setTitle(word.page.ipSettings)
+
+    const form = this.getForm({
+      label: word.page.ipSettings_Settings,
+      explanation: word.page.ipSettings_SettingsExplanation
+    })
+
+    /**
+     * @type {HTMLElement} The select element for choosing address mode.
+     */
+    const addressmode = this.getInput({
+      attr: attr.addressmode,
+      id: `addressmode`,
+      type: 'select',
+      options: this.#translate.getAddressmode(),
+      defaultValue: this.#device.IP.addressmode,
+      disableIndexInLabel: true,
+      optgroup: [
+        { index: new Set([1, 2, 4, 5]), label: word.automatic }
+      ]
+    })
+
+    /**
+     * @type {HTMLElement} The input element for entering IP address.
+     */
+    const ipaddress = this.getInput({
+      attr: attr.ipaddress,
+      id: `ipaddress`,
+      type: 'input',
+      subtype: 'text',
+      defaultValue: this.#device.IP.ipaddress
+    })
+
+    /**
+     * @type {HTMLElement} The input element for entering netmask.
+     */
+    const netmask = this.getInput({
+      attr: attr.netmask,
+      id: `netmask`,
+      type: 'input',
+      subtype: 'text',
+      defaultValue: this.#device.IP.netmask
+    })
+
+    form.fieldset.append(addressmode, ipaddress, netmask)
+
+    const button = this.getSubmit(word.page.ipSettings_SettingsSubmit)
+
+    form.fieldset.append(button)
+
+    /**
+     * Updates the visibility of IP address and netmask fields based on the selected address mode.
+     * Disables or enables fields based on whether the address mode is set to 'Custom IP'.
+     */
+    const updateVisibilityAndValues = () => {
+      const nodeToHide = [ipaddress, netmask]
+      if (Number(addressmode.children[1].value) === 3) { // Custom IP
+        this.disabledElem({ elem: nodeToHide })
+      } else {
+        this.disabledElem({ elem: nodeToHide, disabled: true })
+      }
+    }
+
+    addressmode.addEventListener('change', updateVisibilityAndValues)
+
+    /**
+     * Formats an IP address to ensure each octet is padded to three digits.
+     * @param {string} value - The IP address value to format.
+     * @returns {string} The formatted IP address.
+     */
+    const reIp = value => value.split('.').map(input => String(Number(input)).padStart(3, '0')).join('.')
+
+    /**
+     * List of form elements and their corresponding preprocessing functions.
+     * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
+     */
+    const list = [
+      { key: 'addressmode', elem: addressmode },
+      { key: 'ipaddress', elem: ipaddress, precall: reIp },
+      { key: 'netmask', elem: netmask, precall: reIp }
+    ]
+
+    /**
+     * Validates the input values and returns an error message if any values are invalid.
+     * @returns {string|false} An error message if there is a validation error; otherwise, false.
+     */
+    const check = () => {
+      const validIP = /^(?:(?:25[0-5]|(?:2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
+      if (Number(addressmode.children[1].value) === 3) { // Custom IP
+        const values = {
+          ipaddress: ipaddress.children[1].value,
+          netmask: netmask.children[1].value
+        }
+        if (!validIP.test(values.ipaddress)) {
+          return this.#translate.replaceText({
+            text: word.page.ipSettings_Check_Ipaddress,
+            search: { '%1': values.ipaddress }
+          })
+        }
+        if (!validIP.test(values.netmask)) {
+          return this.#translate.replaceText({
+            text: word.page.ipSettings_Check_Netmask,
+            search: { '%1': values.netmask }
+          })
+        }
+      } else {
+        return false
+      }
+    }
+
+    /**
+     * Handles the response after form submission.
+     * If a new IP address is provided, redirects to the new URL after a delay.
+     * @param {Object} response - The response from the form submission.
+     * @param {string} [response.ipaddress] - The new IP address to redirect to.
+     */
+    const after = response => {
+      if (response.ipaddress && response.ipaddress !== window.location.host) {
+        setTimeout(() => {
+          const newUrl = `http://${response.ipaddress.split('.').map(input => String(Number(input))).join('.')}/${location.search}`
+          if (!this.#devMode) {
+            window.location.replace(newUrl)
+          }
+        }, 3000)
+      }
+    }
+
+    this.sendForm({
+      list: list,
+      form: form.form,
+      button: button,
+      url: apis.saveInfo,
+      check: check,
+      after: after,
+      success: word.page.ipSettings_SettingsSuccess
+    })
+
+    this.#pageContent.append(form.form)
+
+    updateVisibilityAndValues()
+  }
+
 
   /**
  * Asynchronously generates and displays the system status page

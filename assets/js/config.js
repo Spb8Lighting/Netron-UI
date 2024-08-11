@@ -57,6 +57,7 @@ export const word = {
   sACN: 'sACN',
   ArtNet: 'Art-Net',
   locked: '🛇', // Think to update other parameter below using the same icon
+  automatic: 'Automatic',
   page: {
     notFound: 'Page not found',
     notFound_desc: 'The page <em class="text-primary">%1</em> can not be found.',
@@ -100,6 +101,13 @@ export const word = {
     dmxPorts_ClonePort_PortIsCloningLocal_desc: 'The port %1 is cloning the current Port %2 (dependancy loop)', // %1 = port ID distant, %2 = port ID local
     dmxPorts_SubmitSuccess: 'Port %1 updated successfully!', // %1 = port ID
     dmxPorts_Submit_Error_Clone: 'Port %1 is cloned by Port%2: %3', // %1 = port ID, %2 = plurial if several port are using this port, %3 is the list of port cloning current port
+    ipSettings: 'IP address',
+    ipSettings_Settings: 'Settings',
+    ipSettings_SettingsExplanation: 'After IP change, you will be redirected to the new address.',
+    ipSettings_SettingsSubmit: 'Save',
+    ipSettings_SettingsSuccess: 'IP settings have been successfully updated!',
+    ipSettings_Check_Ipaddress: 'The IP address %1 is incorrect', // %1 = user ip address
+    ipSettings_Check_Netmask: 'The Net mask %1 is incorrect', // %1 = user net mask
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -342,7 +350,8 @@ export const apis = {
   setIdentify: 'set_identify',
   savePresetNetron: 'save_preset_netron',
   loadPresetNetron: 'load_preset_netron',
-  saveDMXPort: 'save_dmx_port'
+  saveDMXPort: 'save_dmx_port',
+  saveInfo: 'save_info'
 }
 
 /**

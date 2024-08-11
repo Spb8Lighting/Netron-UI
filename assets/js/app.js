@@ -31,7 +31,8 @@ const _PAGE_ = new Page({
   _ALERT_: document.getElementById('alert'),
   _FETCH_: _FETCH_,
   _DEVICE_: _DEVICE_,
-  _MENU_: _MENU_
+  _MENU_: _MENU_,
+  devMode: devMode
 })
 
 // Initialize DEVICE (call to apis)

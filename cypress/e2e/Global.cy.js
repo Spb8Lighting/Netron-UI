@@ -386,7 +386,6 @@ context('Check pages', () => {
       cy.get('@LoadPreset').find(':selected').should('have.text', '1: Preset 1')
     })
   })
-  
   describe('DMX ports', () => {
     it('access the page, check its default content and check API calls', () => {
       const inputList = ['ptClonePort', 'ptMode', 'ptRDM', 'ptProtocol', 'ptUniverse', 'ptMergeMode', 'ptMergeUniverse', 'ptResendProtocol', 'ptResendUniverse', 'ptSendValue', 'ptFramerate', 'ptRangeFrom', 'ptRangeTo', 'ptOffsetAddr']
@@ -477,7 +476,7 @@ context('Check pages', () => {
 
       const visibleOutputMerge = new Set([...visibleOutput, 'ptMergeUniverse', 'ptResendProtocol', 'ptResendUniverse'])
       const hiddenOutputMerge = inputList.filter(name => !visibleOutputMerge.has(name))
-      
+
       let numberOfPorts = 0
       cy.get('@links')
         .each(($el, index) => {
@@ -586,7 +585,7 @@ context('Check pages', () => {
           cy.get(`@port${index}-ptRangeTo`).should('have.value', '512')
           cy.get(`@port${index}-ptOffsetAddr`).should('have.value', '0')
 
-          for(let i= 1; i<5;i++) {
+          for (let i = 1; i < 5; i++) {
             cy.get(`@port${index}-ptMergeMode`).select(i)
             hiddenOutputMerge.forEach(name => {
               cy.get(`@port${index}-${name}`).should('not.be.visible')
@@ -661,6 +660,55 @@ context('Check pages', () => {
           })
         })
 
+    })
+  })
+  describe('IP Settings', () => {
+    it('access the page, check its default content and check API calls', () => {
+      cy.get('@menuToggle').click()
+
+      cy.intercept('POST', '**?save_info').as('save_info')
+
+      cy.get('#main-menu>ul>li:nth-child(5) a').click()
+
+      cy.get('#addressmode').as('addressMode')
+      cy.get('#ipaddress').as('ipAddress')
+      cy.get('#netmask').as('netMask')
+      cy.get('.btn-primary').as('Submit')
+
+      cy.get('@ipAddress').should('not.be.visible')
+      cy.get('@netMask').should('not.be.visible')
+
+      cy.get('@addressMode').select(5)
+      cy.get('@ipAddress').should('be.visible')
+      cy.get('@netMask').should('be.visible')
+
+      cy.get('@addressMode').select(2)
+      cy.get('@ipAddress').should('not.be.visible')
+      cy.get('@netMask').should('not.be.visible')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@save_info',
+        attrList: {
+          addressmode: '4',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@addressMode').select(5)
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@save_info',
+        attrList: {
+          addressmode: '3',
+          ipaddress: '002.143.056.006',
+          netmask: '255.000.000.000',
+          EndFlag: '1'
+        }
+      })
     })
   })
 })

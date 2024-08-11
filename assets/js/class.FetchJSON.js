@@ -80,7 +80,7 @@ export default class FetchJSON {
 
       // This fetch is to ensure the compatibility with Cypress during the automatise tests
       await fetch(`https://jsonplaceholder.typicode.com/posts?${url}`, headers)
-      return Promise.resolve(fakeResponse)  // Returning the fakeResponse for consistency
+      return Promise.resolve(fakeResponse.headers.body)  // Returning the fakeResponse for consistency
     } else {
       const response = await fetch(url, headers)
       return await response.json()
