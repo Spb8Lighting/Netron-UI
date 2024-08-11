@@ -1363,7 +1363,7 @@ export default class Page {
         if (error) { return error }
 
         for (const [key, val] of formData.entries()) {
-          if (key !== 'idx') { // Do not try to update non existing thing
+          if (key !== 'idx' && key !== 'EndFlag') { // Do not try to update non existing thing
             this.#device.dmxPorts[i][key] = Number(val)
           }
         }
@@ -1558,20 +1558,13 @@ export default class Page {
     addressmode.addEventListener('change', updateVisibilityAndValues)
 
     /**
-     * Formats an IP address to ensure each octet is padded to three digits.
-     * @param {string} value - The IP address value to format.
-     * @returns {string} The formatted IP address.
-     */
-    const reIp = value => value.split('.').map(input => String(Number(input)).padStart(3, '0')).join('.')
-
-    /**
      * List of form elements and their corresponding preprocessing functions.
      * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
      */
     const list = [
       { key: 'addressmode', elem: addressmode },
-      { key: 'ipaddress', elem: ipaddress, precall: reIp },
-      { key: 'netmask', elem: netmask, precall: reIp }
+      { key: 'ipaddress', elem: ipaddress, precall: this.#device.deIpAddress },
+      { key: 'netmask', elem: netmask, precall: this.#device.deIpAddress }
     ]
 
     /**
@@ -1602,6 +1595,18 @@ export default class Page {
       }
     }
 
+    const callback = formData => {
+      for (const [key, val] of formData.entries()) {
+        if (key !== 'EndFlag') {
+          if(key === 'addressmode') {
+          this.#device.IP[key] = Number(val)
+          } else {
+            this.#device.IP[key] = this.#device.reIpAddress(val)
+          }
+        }
+      }
+    }
+
     /**
      * Handles the response after form submission.
      * If a new IP address is provided, redirects to the new URL after a delay.
@@ -1625,6 +1630,7 @@ export default class Page {
       button: button,
       url: apis.saveInfo,
       check: check,
+      callback: callback,
       after: after,
       success: word.page.ipSettings_SettingsSuccess
     })

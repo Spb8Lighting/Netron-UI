@@ -107,8 +107,17 @@ export default class Device {
    * @param {string} val - The IP address or netmask as a string.
    * @returns {string} - The normalized IP address or netmask.
    */
-  #_reIpAddress(val) {
+  reIpAddress(val) {
     return val.split('.').map(input => String(Number(input))).join('.')
+  }
+
+  /**
+   * Formats an IP address to ensure each octet is padded to three digits.
+   * @param {string} value - The IP address value to format.
+   * @returns {string} The formatted IP address.
+   */
+  deIpAddress(val) {
+    return val.split('.').map(input => String(input).padStart(3, '0')).join('.')
   }
 
   /* Getters */
@@ -132,10 +141,11 @@ export default class Device {
     this._setting.data = value
   }
   set IP(value) {
+    console.log('IP from DEVICE', value)
     this._IP.data = {
       ...value,
-      ipaddress: this.#_reIpAddress(value.ipaddress),
-      netmask: this.#_reIpAddress(value.netmask)
+      ipaddress: this.reIpAddress(value.ipaddress),
+      netmask: this.reIpAddress(value.netmask)
     }
   }
   set index(value) {
