@@ -1,4 +1,4 @@
-export const devMode = 'NETRON EN4' // Set to false to go in production mode
+export const devMode = 'NETRON EN12' // Set to false to go in production mode
 
 /**
  * Configuration for application pages and menu items.
@@ -66,7 +66,7 @@ export const word = {
     home_DMXInput: 'DMX inputs',
     home_DMXMerge: 'DMX merge',
     home_DMXPorts: 'DMX ports',
-    home_DMXPorts_ClonedPort:  'Cloning Port %1', // Context: Used to be displayed on General Informations table, in the DMX Port table to provide port protocol (%1 = port ID)
+    home_DMXPorts_ClonedPort:  'Cloning P%1', // Context: Used to be displayed on General Informations table, in the DMX Port table to provide port protocol (%1 = port ID)
     netronPresets: 'Netron presets',
     netronPresets_Load: 'Load',
     netronPresets_LoadExplanation: 'A reboot will be performed after loading the Netron preset (note: the IP can change)',
@@ -108,6 +108,7 @@ export const word = {
     ipSettings_SettingsSuccess: 'IP settings have been successfully updated!',
     ipSettings_Check_Ipaddress: 'The IP address %1 is incorrect', // %1 = user ip address
     ipSettings_Check_Netmask: 'The Net mask %1 is incorrect', // %1 = user net mask
+    cuesRun: 'Run cues',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',

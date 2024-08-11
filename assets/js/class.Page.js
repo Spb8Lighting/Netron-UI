@@ -279,59 +279,85 @@ export default class Page {
    * @returns {HTMLDivElement} The created `<div>` element containing the Netron resume table
    */
   getNetronResumeTable() {
-    const div = document.createElement('div')
-    div.className = 'netron-table ms-auto me-auto'
+    const globalDiv = document.createElement('div')
+    globalDiv.className = 'netron-table p-0 m-0 ms-auto me-auto'
 
-    const pName = document.createElement('p')
-    pName.className = 'text-center p-0 m-0'
-    pName.innerText = this.#device.setting.DeviceName
-    div.append(pName)
+    const portPerTable = 4
 
-    const table = document.createElement('table')
-    table.className = 'm-0 p-0 text-center table table-sm table-bordered align-middle caption-top'
+    for (let t = 0; t < this.#device.dmxPorts.length; t += portPerTable) {
+      const div = document.createElement('div')
+      div.className = 'netron-table'
 
-    const thead = document.createElement('thead')
-    const trHead = document.createElement('tr')
+      const pName = document.createElement('p')
+      pName.className = 'text-center p-0 m-0'
+      pName.innerText = this.#device.setting.DeviceName
+      div.append(pName)
 
-    const tbody = document.createElement('tbody')
-    const trBody = document.createElement('tr')
+      const table = document.createElement('table')
+      table.className = 'm-0 p-0 text-center table table-sm table-bordered align-middle caption-top'
 
-    const tfoot = document.createElement('tfoot')
-    const trFoot = document.createElement('tr')
+      const thead = document.createElement('thead')
+      const trHead = document.createElement('tr')
 
-    this.#device.dmxPorts.forEach((port, i) => {
-      const th = document.createElement('th')
-      th.innerText = i + 1
-      trHead.append(th)
+      const tbody = document.createElement('tbody')
+      const trBody = document.createElement('tr')
 
-      const td = document.createElement('td')
-      if (this.#translate.isClonedPort({ portID: i, port: port })) {
-        td.innerText = `P${port.ptClonePort + 1}`
-      } else {
-        td.innerText = this.#translate.ptUniverse({ value: port.ptUniverse, line: port }).toString().padStart(3, '0')
+      const tfoot = document.createElement('tfoot')
+      const trFoot = document.createElement('tr')
+
+      for (let i = t; i < portPerTable + t; i++) {
+        const port = this.#device.dmxPorts[i]
+        const th = document.createElement('th')
+        th.innerText = i + 1
+        trHead.append(th)
+
+        const td = document.createElement('td')
+        switch (port.ptMode) {
+          case 0: // Disable
+            td.innerText = 'X'
+            break
+          case 1: // Input
+            td.innerText = 'i' + this.#translate.ptUniverse({ value: port.ptUniverse, line: port }).toString().padStart(3, '0')
+            td.className = 'background-green'
+            break
+          case 2: // Output
+            td.className = 'background-blue'
+            if (this.#translate.isClonedPort({ portID: i, port: port })) {
+              td.innerText = `P${port.ptClonePort + 1}`
+            } else {
+              td.innerText = this.#translate.ptUniverse({ value: port.ptUniverse, line: port }).toString().padStart(3, '0')
+            }
+            break
+          case 3: // Send value
+            td.innerText = 'v' + port.ptSendValue.toString().padStart(3, '0')
+            td.className = 'background-purple'
+            break
+        }
+        trBody.append(td)
       }
-      trBody.append(td)
-    })
 
-    thead.append(trHead)
-    tbody.append(trBody)
+      thead.append(trHead)
+      tbody.append(trBody)
 
-    const tdCue = document.createElement('td')
-    tdCue.colSpan = this.#device.dmxPorts.length
-    tdCue.innerText = this.#device.cuesStatus.CueRunningName
-    trFoot.append(tdCue)
+      const tdCue = document.createElement('td')
+      tdCue.colSpan = this.#device.dmxPorts.length
+      tdCue.innerText = this.#device.cuesStatus.CueRunningName
+      trFoot.append(tdCue)
 
-    tfoot.append(trFoot)
+      tfoot.append(trFoot)
 
-    table.append(thead, tbody, tfoot)
+      table.append(thead, tbody, tfoot)
 
-    div.append(table)
+      div.append(table)
 
-    const pIP = pName.cloneNode()
-    pIP.innerText = `IP ${this.#device.IP.ipaddress}`
-    div.append(pIP)
+      const pIP = pName.cloneNode()
+      pIP.innerText = `IP ${this.#device.IP.ipaddress}`
+      div.append(pIP)
 
-    return div
+      globalDiv.append(div)
+    }
+
+    return globalDiv
   }
 
   /**
@@ -656,11 +682,11 @@ export default class Page {
       formData.append('EndFlag', 1)
 
       let error
-      if (callback && typeof callback === 'function') {
-        error = callback(formData)
-      }
       if (check && typeof check === 'function') {
-        error = error ? error : check()
+        error = check()
+      }
+      if (callback && typeof callback === 'function') {
+        error = error ? error : callback(formData)
       }
 
       if (!error) {
@@ -727,6 +753,10 @@ export default class Page {
     }
 
     return `fa fa-fw ${icon}`
+  }
+
+  #breakpoint() {
+    return window.getComputedStyle(document.body, ':before').content.replace(/\"/g, '')
   }
 
   /**
@@ -1053,8 +1083,17 @@ export default class Page {
       link.dataset.bsToggle = 'tab'
       link.dataset.bsTarget = `#dmxPort${index}`
       link.ariaControls = link.dataset.bsTarget
-      link.innerText = this.#translate.replaceText({ text: word.page.dmxPorts_Tab, search: { '%1': index + 1 } })
       link.id = `dmxPort${index}-tab`
+
+      const spanFull = document.createElement('span')
+      spanFull.className = 'full'
+      spanFull.innerText = this.#translate.replaceText({ text: word.page.dmxPorts_Tab, search: { '%1': index + 1 } })
+
+      const spanSmall = document.createElement('span')
+      spanSmall.className = 'break'
+      spanSmall.innerText = index + 1
+
+      link.append(spanFull, spanSmall)
 
       link.prepend(portIcon)
       li.append(link)
@@ -1598,8 +1637,8 @@ export default class Page {
     const callback = formData => {
       for (const [key, val] of formData.entries()) {
         if (key !== 'EndFlag') {
-          if(key === 'addressmode') {
-          this.#device.IP[key] = Number(val)
+          if (key === 'addressmode') {
+            this.#device.IP[key] = Number(val)
           } else {
             this.#device.IP[key] = this.#device.reIpAddress(val)
           }
@@ -1640,6 +1679,9 @@ export default class Page {
     updateVisibilityAndValues()
   }
 
+  page_cuesRun() {
+    this.setTitle(word.page.cuesRun)
+  }
 
   /**
  * Asynchronously generates and displays the system status page

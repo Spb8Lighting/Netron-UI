@@ -3,8 +3,7 @@ import FetchJSON from 'FetchJSON'
 import Device from 'Device'
 import Menu from 'Menu'
 import Page from 'Page'
-import { devMode, EventName, config, attr } from 'config'
-
+import { devMode, EventName, config } from 'config'
 
 // Add DarkThem switcher and associated events
 new DarkTheme({ home: document.getElementById('themeSwitcher') })
@@ -42,16 +41,16 @@ document.dispatchEvent(new Event(EventName.deviceReady))
 // Display default homepage or display the called page
 const checkPageCall = () => {
   const searchPage = document.location.search.substring(1)
-  if(devMode) {
+  if (devMode) {
     console.group('Device is up')
     console.dir(_DEVICE_)
-    console.groupEnd() 
+    console.groupEnd()
   }
   if (searchPage) {
-    if(devMode) {
+    if (devMode) {
       console.group('Searched page')
       console.dir(searchPage)
-      console.groupEnd() 
+      console.groupEnd()
     }
     return _MENU_.navigate(searchPage)
   }
