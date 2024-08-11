@@ -1389,7 +1389,7 @@ export default class Page {
        * @returns {string|false} Error message if there is an error, otherwise false
        */
       const check = () => {
-        if (ptMode.children[1].value !== 0) { // !Disable
+        if (ptMode.children[1].value !== 0 && !this.#translate.isClonedPort({ portID: i, port: { ptMode: ptMode.children[1].value, ptClonePort: ptClonePort.children[1].value } })) { // !Disable
           const values = {
             ptRangeFrom: Number(ptRangeFrom.children[1].value),
             ptRangeTo: Number(ptRangeTo.children[1].value),
