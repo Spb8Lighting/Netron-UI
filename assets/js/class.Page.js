@@ -41,7 +41,7 @@ export default class Page {
     alert.ariaRole = 'Form feedback'
     alert.innerText = value
 
-    this.#alert.append(alert)
+    this.#alert.prepend(alert)
 
     return alert
   }
