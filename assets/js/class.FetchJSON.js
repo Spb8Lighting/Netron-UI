@@ -44,13 +44,24 @@ export default class FetchJSON {
 
     this.#validatePresence(file, 'file')
 
+    if (this.#devMode) {
+      console.clear()
+      console.group('Fetch < Get')
+      console.log(file)
+    }
+
     try {
       const headers = { ...this.#headers.get, ...options }
-      const response = await fetch(file, headers)
+      const response = await fetch(this.#devMode + file, headers)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      return await response.json()
+      const json = await response.json()
+      if (this.#devMode) {
+        console.table(json)
+        console.groupEnd()
+      }
+      return json
     } catch (error) {
       console.error('Fetch GET error:', error)
       throw error
@@ -99,7 +110,7 @@ export default class FetchJSON {
 
     if (this.#devMode) {
       console.clear()
-      console.group('Fetch < Get')
+      console.group('Fetch < Bulk Get')
       console.log(arrayOfFile)
     }
 
