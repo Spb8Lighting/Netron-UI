@@ -343,6 +343,7 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
 #pageContent .nav-link {
   font-size: 1rem;
   padding: 0.5rem;
+  width:100%
 }
 
 #pageContent .break {
@@ -374,6 +375,14 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
 
 [data-bs-theme=dark] #root .simple-keyboard+.simple-keyboard-preview {
   background: #1c4995;
+}
+
+/* Form */
+.input-group:has(input:invalid) *:not(button) {
+  color: var(--bs-danger-text-emphasis) !important;
+  background-color: var(--bs-danger-bg-subtle) !important;
+  border-color: var(--bs-danger-border-subtle) !important;
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {

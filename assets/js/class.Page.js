@@ -1091,7 +1091,7 @@ export default class Page {
     // Helper function to create a tab
     const createTab = ({ port, index }) => {
       const li = document.createElement('li')
-      li.className = 'nav-item'
+      li.className = 'nav-item align-self-stretch flex-fill'
       li.role = 'presentation'
 
       const portIcon = document.createElement('i')
