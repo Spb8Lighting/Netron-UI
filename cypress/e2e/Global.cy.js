@@ -754,11 +754,11 @@ context('Check pages', () => {
         }
       })
       cy.get('@currentCue').should('have.value', 'Cue 50')
-      
+
     })
   })
 
-  describe.only('Cues > Save cue', () => {
+  describe('Cues > Save cue', () => {
     it('access the page, check its default content and check API calls', () => {
       cy.get('[href="#cues"]').click()
       cy.get('#cues > :nth-child(2) > .nav-link').click()
@@ -785,6 +785,77 @@ context('Check pages', () => {
         alias: '@save_cues',
         attrList: {
           CueNum: '50',
+          EndFlag: '1'
+        }
+      })
+    })
+  })
+
+  describe('Cues > Cue options', () => {
+    it('access the page, check its default content and check API calls', () => {
+      cy.get('[href="#cues"]').click()
+      cy.get('#cues > :nth-child(3) > .nav-link').click()
+
+      cy.intercept('POST', '**?edit_cues').as('editCues')
+
+      cy.get('#idx').as('cueNum')
+      cy.get('#name').as('cueName')
+      cy.get('#fadeTime').as('fadeTime')
+      cy.get('#holdTime').as('holdTime')
+      cy.get('#linkCue').as('linkCue')
+
+      cy.get('button[type="submit"]').as('Submit')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@editCues',
+        attrList: {
+          idx: '1',
+          Name: 'Cue 1',
+          fadeTime: '0',
+          linkCue: '0',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@cueNum').select(49)
+      cy.get('@cueName')
+        .should('have.value', 'Cue 50')
+        .clear().type('New cue name for Cue 50')
+        .should('have.value', 'New cue name')
+      cy.get('@fadeTime').clear().type('00:00:05')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@editCues',
+        attrList: {
+          idx: '50',
+          Name: 'New cue name',
+          fadeTime: '5',
+          linkCue: '0',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@cueNum').select(0)
+      cy.get('@linkCue').select(2)
+
+      cy.get('@holdTime')
+        .should('be.visible')
+        .clear().type('00:00:10')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@editCues',
+        attrList: {
+          idx: '1',
+          Name: 'Cue 1',
+          fadeTime: '0',
+          holdTime: '10',
+          linkCue: '2',
           EndFlag: '1'
         }
       })

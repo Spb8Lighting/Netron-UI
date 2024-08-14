@@ -160,6 +160,19 @@ export default class Page {
   }
 
   /**
+   * Creates a block text element
+   *
+   * @param {string} value - The text to display in the block title.
+   * @returns {HTMLElement} The created `<p>` element with the specified text.
+   */
+  #getBlockText(value) {
+    const p = document.createElement('p')
+    p.className = 'text-muted'
+    p.innerText = value
+    return p
+  }
+
+  /**
    * Retrieves an attribute value from a line object, applying translation if available.
    *
    * @param {Object} options - Configuration for retrieving the attribute value.
@@ -399,6 +412,44 @@ export default class Page {
   }
 
   /**
+   * Converts the given number of seconds to a formatted time string.
+   * 
+   * @param {number} seconds - The number of seconds to convert.
+   * @returns {string} The formatted time string in the format HH:MM:SS.
+   */
+  #secondsToTimeInput(seconds) {
+    // Calculate hours, minutes, and seconds
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    // Format hours, minutes, and seconds as HH:MM:SS
+    const formattedTime = [
+      hours.toString().padStart(2, '0'),
+      minutes.toString().padStart(2, '0'),
+      secs.toString().padStart(2, '0')
+    ].join(':')
+
+    return formattedTime
+  }
+
+  /**
+   * Converts a time string to the total number of seconds.
+   *
+   * @param {string} timeString - The time string in the format "HH:MM:SS".
+   * @returns {number} The total number of seconds.
+   */
+  #timeInputToSeconds(timeString) {
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
+
+    // Calculate the total seconds
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds
+
+    return totalSeconds
+  }
+
+  /**
  * Creates an input element based on provided attributes and options
  * 
  * @param {Object} params - The parameters for creating the input
@@ -454,6 +505,10 @@ export default class Page {
         input = document.createElement('input')
         input.type = subtype ? subtype : 'text'
 
+        if (subtype === 'time') {
+          input.step = 1
+        }
+
         if (input.type === 'checkbox') {
           input.className = 'form-check-input'
           if (defaultValue) { input.checked = true }
@@ -465,14 +520,18 @@ export default class Page {
         } else {
           input.autocomplete = 'off'
           input.className = 'form-control'
-          input.value = defaultValue
+          if (subtype === 'time') {
+            input.value = defaultValue ? this.#secondsToTimeInput(defaultValue) : '00:00:00'
+          } else {
+            input.value = defaultValue
+          }
           if (min !== undefined) { input.min = min }
           if (max !== undefined) { input.max = max }
           if (minLength !== undefined) { input.minLength = minLength }
           if (maxLength !== undefined) { input.maxLength = maxLength }
           if (required) { input.required = true }
 
-          if (!disabled) {
+          if (!disabled && subtype !== 'time') {
             const keyboardLink = document.createElement('span')
             keyboardLink.className = 'input-group-text'
 
@@ -1804,7 +1863,7 @@ export default class Page {
    */
   page_cuesSave() {
     this.setTitle(word.page.cuesSave)
-    // Save Form
+
     const form = this.getForm({ label: word.page.cuesSave_Save, explanation: word.page.cuesSave_Explanation })
 
     const cueNum = this.getInput({
@@ -1834,6 +1893,171 @@ export default class Page {
       button: button,
       url: apis.saveCues,
       success: word.page.cuesSave_Success
+    })
+  }
+
+  page_cuesOptions() {
+    this.setTitle(word.page.cuesOptions)
+
+    const form = this.getForm({ label: word.page.cuesOptions_Options, explanation: word.page.cuesOptions_Explanation })
+
+    const idx = this.getInput({
+      attr: attr.optionCue,
+      id: 'idx',
+      type: 'select',
+      options: this.#device.cues.map((cue, index) => ({ value: index + 1, name: cue.name }))
+    })
+
+    const name = this.getInput({
+      attr: attr.nameCue,
+      id: 'name',
+      type: 'input',
+      minLength: 1,
+      maxLength: 12,
+      required: true,
+      defaultValue: this.#device.cues[0].name
+    })
+
+    const timingTitle = this.getBlockTitle(word.timing)
+    timingTitle.classList.add('mt-2')
+
+    const timingText = this.#getBlockText(word.page.cuesOptions_Timing)
+
+    const fadeTime = this.getInput({
+      attr: attr.fadeTimeCue,
+      id: 'fadeTime',
+      type: 'input',
+      subtype: 'time',
+      defaultValue: this.#device.cues[0].fadeTime
+    })
+
+    const holdTime = this.getInput({
+      attr: attr.holdTimeCue,
+      id: 'holdTime',
+      type: 'input',
+      subtype: 'time',
+      defaultValue: this.#device.cues[0].holdTime
+    })
+
+    const linkingTitle = this.getBlockTitle(word.link)
+    linkingTitle.classList.add('mt-2')
+
+    const linkCue = this.getInput({
+      attr: attr.linkedCue,
+      id: 'linkCue',
+      type: 'select',
+      disableIndexInLabel: true,
+      defaultValue: this.#device.cues[0].linkCue,
+      options: [
+        { name: 'None' },
+        ...this.#device.cues.map((cue, index) => ({ name: `${index + 1}: ${cue.name}` }))
+      ]
+    })
+
+    const button = this.getSubmit(word.page.cuesOptions_Submit)
+
+    form.fieldset.append(idx, name, timingTitle, timingText, fadeTime, holdTime, linkingTitle, linkCue, button)
+
+    this.#pageContent.append(form.form)
+
+    /**
+    * List of form elements and their corresponding preprocessing functions.
+    * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
+    */
+    const list = [
+      { key: 'idx', elem: idx },
+      { key: 'Name', elem: name },
+      { key: 'fadeTime', elem: fadeTime, precall: this.#timeInputToSeconds },
+      { key: 'holdTime', elem: holdTime, precall: this.#timeInputToSeconds },
+      { key: 'linkCue', elem: linkCue }
+    ]
+
+    /**
+     * Updates the visibility and values of elements based on selected options.
+     */
+    const updateVisibilityAndValues = () => {
+      const selectedIdxValue = Number(idx.children[1].selectedOptions[0].value)
+      const selectedLinkCueValue = Number(linkCue.children[1].selectedOptions[0].value)
+      const prefix = `${word.locked} `
+
+      // Iterate through the options in linkCue and disable the matching option
+      Array.from(linkCue.children[1].options).forEach(option => {
+        const isPrefixed = option.text.startsWith(prefix)
+        if (Number(option.value) === selectedIdxValue) {
+          if (!isPrefixed) {
+            option.text = `${prefix}${option.text}`
+          }
+          option.disabled = true
+        } else {
+          if (isPrefixed) {
+            option.text = option.text.replace(prefix, '')
+          }
+          option.disabled = false
+        }
+      })
+
+      if (selectedLinkCueValue === 0 || selectedLinkCueValue === selectedIdxValue) {
+        this.disabledElem({
+          elem: holdTime,
+          disabled: true
+        })
+      } else {
+        this.disabledElem({
+          elem: holdTime
+        })
+      }
+    }
+
+    /**
+     * Renders the cues options page.
+     * 
+     * @returns {void}
+     */
+    form.form.addEventListener('change', e => {
+      if (e.target.name === 'linkCue') {
+        updateVisibilityAndValues()
+      } else if (e.target.name === 'idx') {
+        const cueIndex = Number(e.target.value) - 1
+        name.children[1].value = this.#device.cues[cueIndex].name
+        fadeTime.children[1].value = this.#secondsToTimeInput(this.#device.cues[cueIndex].fadeTime)
+        holdTime.children[1].value = this.#secondsToTimeInput(this.#device.cues[cueIndex].holdTime)
+        linkCue.children[1].value = this.#device.cues[cueIndex].linkCue
+        updateVisibilityAndValues()
+      }
+    })
+
+    updateVisibilityAndValues()
+
+    /**
+     * Callback function that updates the cue status and cues settings.
+     * 
+     * @param {FormData} formData - The form data containing the updated values.
+     * @returns {void}
+     */
+    const callback = formData => {
+      const cueIndex = Number(formData.get('idx')) - 1
+
+      if(this.#device.cues[cueIndex].name !== formData.get('Name')) {
+        this.#device.cues[cueIndex].name = formData.get('Name')
+        idx.children[1].options[cueIndex].innerText = `${cueIndex + 1}: ${formData.get('Name')}`
+        linkCue.children[1].options[cueIndex + 1].innerText = `${cueIndex + 1}: ${formData.get('Name')}`
+      }
+      this.#device.cues[cueIndex].fadeTime = Number(formData.get('fadeTime'))
+      this.#device.cues[cueIndex].linkCue = Number(formData.get('linkCue'))
+
+      if (formData.has('holdTime')) {
+        this.#device.cues[cueIndex].holdTime = Number(formData.get('holdTime'))
+      }
+      updateVisibilityAndValues()
+    }
+
+    this.sendForm({
+      list: list,
+      form: form.form,
+      button: button,
+      url: apis.editCues,
+      callback: callback,
+      success: word.page.cuesOptions_Success
     })
   }
 

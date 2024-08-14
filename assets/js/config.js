@@ -67,6 +67,8 @@ export const word = {
   ArtNet: 'Art-Net',
   locked: '🛇', // Think to update other parameter below using the same icon
   automatic: 'Automatic',
+  timing: 'Timing',
+  link: 'Next cue',
   page: {
     notFound: 'Page not found',
     notFound_desc: 'The page <em class="text-primary">%1</em> can not be found.',
@@ -130,6 +132,13 @@ export const word = {
     cuesSave_Explanation: 'Save all values on all ports to a cue slot',
     cuesSave_Submit: 'Save',
     cuesSave_Success: 'Cue successfully saved!',
+    cuesOptions: 'Cue options',
+    cuesOptions_Options: 'Options',
+    cuesOptions_Explanation: 'Select a cue to access its prorperties',
+    cuesOptions_Select: 'Select cue',
+    cuesOptions_Timing: 'Time format is HH:MM:SS',
+    cuesOptions_Submit: 'Load',
+    cuesOptions_Success: 'Cue options modified successfully!',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -276,6 +285,26 @@ export const attr = {
     label: 'Save as', icon: 'fa-floppy-disk', attr: 'NumCue',
     desc: 'It allows to save all values on all ports to a cue slot'
   },
+  optionCue: {
+    label: 'Edit', icon: 'fa-pen-to-square', attr: 'idx',
+    desc: 'It allows modify a cue properties'
+  },
+  linkedCue: {
+    label: 'Link to', icon: 'fa-link', attr: 'linkCue',
+    desc: 'It allows to link a cue to another one'
+  },
+  nameCue: {
+    label: 'Name', icon: 'fa-font', attr: 'Name',
+    desc: 'It is the name of the cue'
+  },
+  fadeTimeCue: {
+    label: 'Fade time', icon: 'fa-arrow-up-wide-short', attr: 'FadeTime',
+    desc: 'Set the fade time of the cue'
+  },
+  holdTimeCue: {
+    label: 'Hold time', icon: 'fa-clock', attr: 'HoldTime',
+    desc: 'Set the time to hold the cue until the next (linked) cue is started'
+  },
   cuesResendEth: {
     label: 'Resend Ethernet', icon: 'fa-repeat', attr: 'CuesResendEth',
     desc: 'Cue data is sent on the Universe number and protocol assigned to the port'
@@ -395,7 +424,8 @@ export const apis = {
   saveDMXPort: 'save_dmx_port',
   saveInfo: 'save_info',
   runCues: 'run_cues',
-  saveCues: 'save_cues'
+  saveCues: 'save_cues',
+  editCues: 'edit_cues'
 }
 
 /**
