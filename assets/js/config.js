@@ -38,7 +38,8 @@ export const config = {
     items: {
       run: { name: 'Run cue' },
       save: { name: 'Save cue' },
-      options: { name: 'Cue options' }
+      options: { name: 'Cue options' },
+      list: { name: 'Cuelist' }
     }
   },
   ipSettings: {
@@ -139,6 +140,9 @@ export const word = {
     cuesOptions_Timing: 'Time format is HH:MM:SS',
     cuesOptions_Submit: 'Load',
     cuesOptions_Success: 'Cue options modified successfully!',
+    cuesList: 'Cuelist',
+    cuesList_Cuelist: 'Cuelist n°%1', // %1 = cuelist ID
+    cuesList_Explanation: 'This page display virtual cuelist(s) based on your cues settings.\nIf the page is empty, it means that no cue link is set.',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -292,6 +296,14 @@ export const attr = {
   linkedCue: {
     label: 'Link to', icon: 'fa-link', attr: 'linkCue',
     desc: 'It allows to link a cue to another one'
+  },
+  cueCuelist: {
+    label: '', icon: 'fa-hashtag', attr: 'id',
+    desc: 'It is the cuelist order number'
+  },
+  idCue: {
+    label: 'Cue ID', icon: 'fa-hashtag', attr: 'idx',
+    desc: 'It is the cue ID'
   },
   nameCue: {
     label: 'Name', icon: 'fa-font', attr: 'name',

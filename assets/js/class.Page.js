@@ -1999,7 +1999,7 @@ export default class Page {
     const callback = formData => {
       const cueIndex = Number(formData.get('idx')) - 1
 
-      if(this.#device.cues[cueIndex].name !== formData.get('Name')) {
+      if (this.#device.cues[cueIndex].name !== formData.get('Name')) {
         this.#device.cues[cueIndex].name = formData.get('Name')
         idx.children[1].options[cueIndex].innerText = `${cueIndex + 1}: ${formData.get('Name')}`
         linkCue.children[1].options[cueIndex + 1].innerText = `${cueIndex + 1}: ${formData.get('Name')}`
@@ -2021,6 +2021,92 @@ export default class Page {
       callback: callback,
       success: word.page.cuesOptions_Success
     })
+  }
+
+  /**
+   * Retrieves the cuelists from the device.
+   * 
+   * @returns {Array<Array<Object>>} An array of cuelists, where each cuelist is an array of cues.
+   */
+  #cuelists() {
+    const linkCuesID = new Set(this.#device.cues.map(cue => cue.linkCue))
+    const cues = this.#device.cues
+      .map((cue, index) => ({ ...cue, idx: index + 1 }))
+      .filter(cue => cue.linkCue !== 0 || linkCuesID.has(cue.idx))
+
+    const cueMap = new Map()
+    const linkCues = new Set()
+    const groupedCues = new Set()
+    const cuelists = []
+
+    // Create a map from index to cue and collect all linkCues
+    cues.forEach(cue => {
+      cueMap.set(cue.idx, cue)
+      if (cue.linkCue !== 0) {
+        linkCues.add(cue.linkCue)
+      }
+    })
+
+    // Identify starting cues and group them
+    cues.forEach(cue => {
+      if (!linkCues.has(cue.idx) && !groupedCues.has(cue.idx)) {
+        const cuelist = []
+        let currentCue = cue
+
+        // Keep linking cues based on linkCue
+        while (currentCue) {
+          cuelist.push(currentCue)
+          groupedCues.add(currentCue.idx)
+
+          // Check if the next cue exists in the map
+          if (!cueMap.has(currentCue.linkCue)) {
+            break
+          }
+
+          // Move to the next cue
+          currentCue = cueMap.get(currentCue.linkCue)
+
+          // Prevent infinite loop by checking if the cue is already grouped
+          if (groupedCues.has(currentCue.idx)) {
+            break
+          }
+        }
+
+        cuelists.push(cuelist)
+      }
+    })
+
+    return cuelists
+  }
+
+  page_cuesList() {
+    this.setTitle(word.page.cuesList)
+
+    const explanation = this.#getBlockText(word.page.cuesList_Explanation)
+
+    this.#pageContent.append(explanation)
+
+    const cuelists = this.#cuelists()
+
+    cuelists.forEach((cuelist, index) => {
+
+      const cuelistTitle = this.getBlockTitle(this.#translate.replaceText({ text: word.page.cuesList_Cuelist, search: { '%1': index + 1 } }))
+
+      const cuelistTable = this.getTable({
+        config: [
+          { ...attr.cueCuelist, attr: 'index' },
+          attr.idCue,
+          attr.nameCue,
+          attr.fadeTimeCue,
+          attr.holdTimeCue,
+          attr.linkedCue
+        ],
+        content: cuelist
+      })
+
+      this.#pageContent.append(cuelistTitle, cuelistTable)
+    })
+
   }
 
   /**
