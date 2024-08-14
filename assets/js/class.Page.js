@@ -608,7 +608,12 @@ export default class Page {
       if (explanation) {
         const p = document.createElement('p')
         p.className = 'text-muted'
-        p.innerHTML = explanation
+        // Check if explanation contains newline characters
+        if (explanation.includes('\n')) {
+          p.innerHTML = explanation.replace(/\n/g, '<br/>')
+        } else {
+          p.innerText = explanation
+        }
         fieldset.append(p)
       }
     }
