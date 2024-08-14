@@ -1798,6 +1798,46 @@ export default class Page {
   }
 
   /**
+   * Request device to saves all ports value to the selected cue
+   * 
+   * @returns {void}
+   */
+  page_cuesSave() {
+    this.setTitle(word.page.cuesSave)
+    // Save Form
+    const form = this.getForm({ label: word.page.cuesSave_Save, explanation: word.page.cuesSave_Explanation })
+
+    const cueNum = this.getInput({
+      attr: attr.saveCue,
+      id: 'CueNum',
+      type: 'select',
+      options: this.#device.cues.map((cue, index) => ({ value: index + 1, name: cue.name }))
+    })
+
+    const button = this.getSubmit(word.page.cuesSave_Submit)
+
+    form.fieldset.append(cueNum, button)
+
+    this.#pageContent.append(form.form)
+
+    /**
+    * List of form elements and their corresponding preprocessing functions.
+    * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
+    */
+    const list = [
+      { key: 'CueNum', elem: cueNum }
+    ]
+
+    this.sendForm({
+      list: list,
+      form: form.form,
+      button: button,
+      url: apis.saveCues,
+      success: word.page.cuesSave_Success
+    })
+  }
+
+  /**
  * Asynchronously generates and displays the system status page
  * This method sets the page title, creates and displays device information,
  * IP address details, and firmware version information

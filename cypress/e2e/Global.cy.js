@@ -758,6 +758,39 @@ context('Check pages', () => {
     })
   })
 
+  describe.only('Cues > Save cue', () => {
+    it('access the page, check its default content and check API calls', () => {
+      cy.get('[href="#cues"]').click()
+      cy.get('#cues > :nth-child(2) > .nav-link').click()
+
+      cy.intercept('POST', '**?save_cues').as('save_cues')
+
+      cy.get('#CueNum').as('cueNum')
+      cy.get('button[type="submit"]').as('Submit')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@save_cues',
+        attrList: {
+          CueNum: '1',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@cueNum').select(49)
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@save_cues',
+        attrList: {
+          CueNum: '50',
+          EndFlag: '1'
+        }
+      })
+    })
+  })
+
   describe('IP Settings', () => {
     it('access the page, check its default content and check API calls', () => {
       cy.get('@menuToggle').click()

@@ -116,6 +116,11 @@ export const word = {
     cuesRun_ResendEthernet: 'Resend Ethernet',
     cuesRun_Submit: 'Run',
     cuesRun_Success: 'Run cues set successfully!',
+    cuesSave: 'Save cue',
+    cuesSave_Save: 'Save',
+    cuesSave_Explanation: 'Save all values on all ports to a cue slot',
+    cuesSave_Submit: 'Save',
+    cuesSave_Success: 'Cue successfully saved!',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -258,6 +263,10 @@ export const attr = {
     label: 'Run cue', icon: 'fa-clipboard-list', attr: 'RunCue',
     desc: 'It allows to run a cue'
   },
+  saveCue: {
+    label: 'Save as', icon: 'fa-floppy-disk', attr: 'NumCue',
+    desc: 'It allows to save all values on all ports to a cue slot'
+  },
   cuesResendEth: {
     label: 'Resend Ethernet', icon: 'fa-repeat', attr: 'CuesResendEth',
     desc: 'Cue data is sent on the Universe number and protocol assigned to the port'
@@ -376,7 +385,8 @@ export const apis = {
   loadPresetNetron: 'load_preset_netron',
   saveDMXPort: 'save_dmx_port',
   saveInfo: 'save_info',
-  runCues: 'run_cues'
+  runCues: 'run_cues',
+  saveCues: 'save_cues'
 }
 
 /**
