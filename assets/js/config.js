@@ -1,4 +1,4 @@
-export const devMode = 'NETRON EN12' // Set to false to go in production mode
+export const devMode = 'NETRON EP1' // Set to false to go in production mode
 
 /**
  * Configuration for application pages and menu items.
@@ -66,7 +66,7 @@ export const word = {
     home_DMXInput: 'DMX inputs',
     home_DMXMerge: 'DMX merge',
     home_DMXPorts: 'DMX ports',
-    home_DMXPorts_ClonedPort:  'Cloning P%1', // Context: Used to be displayed on General Informations table, in the DMX Port table to provide port protocol (%1 = port ID)
+    home_DMXPorts_ClonedPort: 'Cloning P%1', // Context: Used to be displayed on General Informations table, in the DMX Port table to provide port protocol (%1 = port ID)
     netronPresets: 'Netron presets',
     netronPresets_Load: 'Load',
     netronPresets_LoadExplanation: 'A reboot will be performed after loading the Netron preset (note: the IP can change)',
@@ -109,6 +109,13 @@ export const word = {
     ipSettings_Check_Ipaddress: 'The IP address %1 is incorrect', // %1 = user ip address
     ipSettings_Check_Netmask: 'The Net mask %1 is incorrect', // %1 = user net mask
     cuesRun: 'Run cues',
+    cuesRun_Run: 'Cue state',
+    cuesRun_RunExplanation: 'Select a cue to be runned, or select "Disabled" to stop cue runs\nThe Resend Ethernet option change is live',
+    cuesRun_RunSelect: 'Select cue',
+    cuesRun_RunCurrentCue: 'Current cue',
+    cuesRun_RunResendEthernet: 'Resend Ethernet',
+    cuesRun_RunSubmit: 'Run',
+    cuesRun_RunSuccess: 'Run cues set successfully!',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -247,6 +254,18 @@ export const attr = {
     label: 'Resend Universe', icon: 'fa-infinity', attr: 'ptResendUniverse',
     desc: 'It allows to set the EtherDMX Universe of the port to be send when merging'
   },
+  runCue: {
+    label: 'Run cue', icon: 'fa-clipboard-list', attr: 'RunCue',
+    desc: 'It allows to run a cue'
+  },
+  cuesResendEth: {
+    label: 'Resend Ethernet', icon: 'fa-repeat', attr: 'CuesResendEth',
+    desc: 'Cue data is sent on the Universe number and protocol assigned to the port'
+  },
+  currentCue: {
+    label: 'Current cue', icon: 'fa-play', attr: 'CurrentCueName',
+    desc: 'It is the current running cue'
+  },
   FirmwareVer: {
     label: 'Firmware', icon: 'fa-microchip', attr: 'FirmwareVer',
     desc: 'It is the firmware version'
@@ -319,6 +338,10 @@ export const translate = {
   ]
 }
 
+export const timing = {
+  runCues: 1000
+}
+
 /**
  * This is display value for empty parameter
  * 
@@ -352,7 +375,8 @@ export const apis = {
   savePresetNetron: 'save_preset_netron',
   loadPresetNetron: 'load_preset_netron',
   saveDMXPort: 'save_dmx_port',
-  saveInfo: 'save_info'
+  saveInfo: 'save_info',
+  runCues: 'run_cues'
 }
 
 /**

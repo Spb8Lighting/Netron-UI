@@ -661,6 +661,103 @@ context('Check pages', () => {
 
     })
   })
+
+  describe('Cues > Run cues', () => {
+    it('access the page, check its default content and check API calls', () => {
+      cy.get('[href="#cues"]').click()
+      cy.get('#cues > :nth-child(1) > .nav-link').click()
+
+      cy.intercept('POST', '**?run_cues').as('run_cues')
+
+      cy.get('#runCue').as('runCue')
+      cy.get('#currentCue').as('currentCue')
+      cy.get('#cuesResendEth').as('resendEthernet')
+      cy.get('button[type="submit"]').as('Submit')
+
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          RunCue: '0',
+          CuesResendEth: '0',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@runCue').select(1)
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          RunCue: '1',
+          CuesResendEth: '0',
+          EndFlag: '1'
+        }
+      })
+      cy.get('@currentCue').should('have.value', 'Cue 1')
+
+      cy.get('@runCue').select(0)
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          RunCue: '0',
+          CuesResendEth: '0',
+          EndFlag: '1'
+        }
+      })
+      cy.get('@currentCue').should('have.value', 'No Cue')
+
+      cy.get('@resendEthernet').check()
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          CuesResendEth: '1',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@runCue').select(10)
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          RunCue: '10',
+          CuesResendEth: '1',
+          EndFlag: '1'
+        }
+      })
+      cy.get('@currentCue').should('have.value', 'Cue 10')
+
+      cy.get('@resendEthernet').uncheck()
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          CuesResendEth: '0',
+          EndFlag: '1'
+        }
+      })
+
+      cy.get('@runCue').select(50)
+      cy.get('@Submit').click()
+
+      cy.checkRequest({
+        alias: '@run_cues',
+        attrList: {
+          RunCue: '50',
+          CuesResendEth: '0',
+          EndFlag: '1'
+        }
+      })
+      cy.get('@currentCue').should('have.value', 'Cue 50')
+      
+    })
+  })
+
   describe('IP Settings', () => {
     it('access the page, check its default content and check API calls', () => {
       cy.get('@menuToggle').click()

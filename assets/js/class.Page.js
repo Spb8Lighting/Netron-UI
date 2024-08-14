@@ -1,6 +1,6 @@
 import MobileKeyboard from 'MobileKeyboard'
 import Translate from 'Translate'
-import { EventName, config, attr, word, apis } from 'config'
+import { EventName, config, attr, word, apis, timing } from 'config'
 
 export default class Page {
 
@@ -402,6 +402,7 @@ export default class Page {
  * Creates an input element based on provided attributes and options
  * 
  * @param {Object} params - The parameters for creating the input
+ * @param {string} [params.disabled] - Disabled the input/select
  * @param {string} [params.attr] - Attribute object containing label and description
  * @param {boolean} [params.disableIndexInLabel] - Whether to disable index in option labels
  * @param {string} [params.label] - Label text for the input
@@ -423,7 +424,7 @@ export default class Page {
  * 
  * @returns {HTMLDivElement} The created `<div>` element containing the input element
  */
-  getInput({ attr, disableIndexInLabel, label, icon, id, name, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
+  getInput({ disabled, attr, disableIndexInLabel, label, icon, id, name, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
     const div = document.createElement('div')
     div.className = 'input-group'
 
@@ -471,21 +472,23 @@ export default class Page {
           if (maxLength !== undefined) { input.maxLength = maxLength }
           if (required) { input.required = true }
 
-          const keyboardLink = document.createElement('span')
-          keyboardLink.className = 'input-group-text'
+          if (!disabled) {
+            const keyboardLink = document.createElement('span')
+            keyboardLink.className = 'input-group-text'
 
-          const keyboardButton = document.createElement('button')
-          keyboardButton.className = 'keyboard m-0 p-0 btn btn-sm'
-          keyboardButton.type = 'button'
+            const keyboardButton = document.createElement('button')
+            keyboardButton.className = 'keyboard m-0 p-0 btn btn-sm'
+            keyboardButton.type = 'button'
 
-          const keyboardIcon = document.createElement('i')
-          keyboardIcon.className = 'm-0 p-0 fs-5 fa fa-fw fa-keyboard'
+            const keyboardIcon = document.createElement('i')
+            keyboardIcon.className = 'm-0 p-0 fs-5 fa fa-fw fa-keyboard'
 
-          keyboardButton.append(keyboardIcon)
+            keyboardButton.append(keyboardIcon)
 
-          keyboardLink.append(keyboardButton)
+            keyboardLink.append(keyboardButton)
 
-          div.append(keyboardLink)
+            div.append(keyboardLink)
+          }
         }
         break
       case 'select':
@@ -559,6 +562,10 @@ export default class Page {
       input.id = id
     }
 
+    if (disabled) {
+      input.disabled = true
+    }
+
     div.prepend(labelNode, input)
     return div
   }
@@ -584,7 +591,7 @@ export default class Page {
    * @param {Object} params - The parameters for creating the form
    * @param {string} [params.id] - ID for the form element
    * @param {string} [params.label] - Label text for the form
-   * @param {string} [params.explanation] - Explanation text to be displayed below the label
+   * @param {string} [params.explanation] - Explanation text to be displayed below the label. \n will be replaced with a line break
    * 
    * @returns {Object} An object containing the created form and fieldset elements
    */
@@ -652,6 +659,34 @@ export default class Page {
   }
 
   /**
+   * Sets the form data based on the provided list.
+   * 
+   * @param {Object[]} list - The list of elements to set the form data.
+   * @returns {FormData} The FormData object containing the form data.
+   */
+  #setFormData({ list }) {
+    const formData = new FormData()
+
+    const formValue = this.getFormValue({ list: list })
+
+    for (const elem of list) {
+      if (formValue.has(elem.key)) {
+        let value = formValue.get(elem.key)
+        if (elem?.directValue === undefined) {
+          if (elem.precall && typeof elem.precall === 'function') {
+            value = elem.precall(value, formData)
+          }
+        }
+        formData.append(elem.key, value)
+      }
+    }
+
+    formData.append('EndFlag', 1)
+
+    return formData
+  }
+
+  /**
    * Handles form submission with validation and data posting
    * 
    * @param {Object} params - The parameters for handling form submission
@@ -669,23 +704,7 @@ export default class Page {
       e.preventDefault()
       this.#keyboard.hide()
 
-      const formData = new FormData()
-
-      const formValue = this.getFormValue({ list: list })
-
-      for (const elem of list) {
-        if (formValue.has(elem.key)) {
-          let value = formValue.get(elem.key)
-          if (elem?.directValue === undefined) {
-            if (elem.precall && typeof elem.precall === 'function') {
-              value = elem.precall(value, formData)
-            }
-          }
-          formData.append(elem.key, value)
-        }
-      }
-
-      formData.append('EndFlag', 1)
+      const formData = this.#setFormData({ list: list })
 
       let error
       if (check && typeof check === 'function') {
@@ -1681,8 +1700,101 @@ export default class Page {
     updateVisibilityAndValues()
   }
 
+  /**
+   * Executes the cues run functionality on the page.
+   * 
+   * @returns {void}
+   */
   page_cuesRun() {
     this.setTitle(word.page.cuesRun)
+
+    const form = this.getForm({ label: word.page.cuesRun_Run, explanation: word.page.cuesRun_RunExplanation })
+
+    const runCue = this.getInput({
+      attr: attr.runCue,
+      id: 'runCue',
+      type: 'select',
+      disableIndexInLabel: true,
+      options: [
+        { name: 'Disabled' },
+        ...this.#device.cues.map((cue, index) => ({ name: `${index + 1}: ${cue.name}` }))
+      ]
+    })
+
+    const currentCue = this.getInput({
+      disabled: true,
+      attr: attr.currentCue,
+      id: 'currentCue',
+      type: 'input',
+      defaultValue: this.#device.cuesStatus.CueRunningName
+    })
+
+    const cuesResendEth = this.getInput({
+      attr: attr.cuesResendEth,
+      id: 'cuesResendEth',
+      type: 'input',
+      subtype: 'checkbox',
+      defaultValue: (this.#device.cuesSetting.CuesResendEth === 1)
+    })
+
+    form.fieldset.append(runCue, currentCue, cuesResendEth)
+
+    const button = this.getSubmit(word.page.cuesRun_RunSubmit)
+
+    form.fieldset.append(button)
+
+    this.#pageContent.append(form.form)
+
+    /**
+    * List of form elements and their corresponding preprocessing functions.
+    * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
+    */
+    const list = [
+      { key: 'RunCue', elem: runCue },
+      { key: 'CuesResendEth', elem: cuesResendEth }
+    ]
+
+    /**
+     * Callback function that updates the cue status and cues settings.
+     * 
+     * @param {FormData} formData - The form data containing the updated values.
+     * @returns {void}
+     */
+    const callback = formData => {
+      const cueIndex = Number(formData.get('RunCue')) - 1
+      this.#device.cuesStatus.CueRunningName = cueIndex >= 0 ? this.#device.cues[cueIndex].name : 'No Cue'
+      currentCue.children[1].value = this.#device.cuesStatus.CueRunningName
+
+      this.#device.cuesSetting.CuesResendEth = Number(formData.get('CuesResendEth'))
+    }
+
+    this.sendForm({
+      list: list,
+      form: form.form,
+      button: button,
+      url: apis.runCues,
+      callback: callback,
+      success: word.page.cuesRun_RunSuccess
+    })
+
+    cuesResendEth.addEventListener('change', async e => {
+      const formData = this.#setFormData({ list: [list[1]] })
+      const response = await this.#fetch.post({ url: apis.runCues, formData: formData })
+      this.#device.cuesSetting.CuesResendEth = Number(formData.get('CuesResendEth'))
+    })
+
+    // Refresh the current cue status every few seconds (deactivated in dev mode)
+    if (!this.#devMode) {
+      const updateCurrentCue = async () => {
+        const response = await this.#fetch.get({ file: apis.cuesStatus })
+        if (response.CueRunningName !== this.#device.cuesStatus.CueRunningName) {
+          this.#device.cuesStatus.CueRunningName = response.CueRunningName
+          currentCue.children[1].value = response.CueRunningName
+        }
+      }
+
+      const refreshCurrentCue = setInterval(() => updateCurrentCue(), timing.runCues)
+    }
   }
 
   /**
