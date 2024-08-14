@@ -662,7 +662,7 @@ context('Check pages', () => {
     })
   })
 
-  describe('Cues > Run cues', () => {
+  describe('Cues > Run cue', () => {
     it('access the page, check its default content and check API calls', () => {
       cy.get('[href="#cues"]').click()
       cy.get('#cues > :nth-child(1) > .nav-link').click()

@@ -27,7 +27,7 @@ export const config = {
   cues: {
     icon: 'fa-film', name: 'Cues',
     items: {
-      run: { name: 'Run cues' },
+      run: { name: 'Run cue' },
       save: { name: 'Save cue' },
       options: { name: 'Cue options' }
     }
@@ -108,14 +108,14 @@ export const word = {
     ipSettings_SettingsSuccess: 'IP settings have been successfully updated!',
     ipSettings_Check_Ipaddress: 'The IP address %1 is incorrect', // %1 = user ip address
     ipSettings_Check_Netmask: 'The Net mask %1 is incorrect', // %1 = user net mask
-    cuesRun: 'Run cues',
-    cuesRun_Run: 'Cue state',
-    cuesRun_RunExplanation: 'Select a cue to be runned, or select "Disabled" to stop cue runs\nThe Resend Ethernet option change is live',
-    cuesRun_RunSelect: 'Select cue',
-    cuesRun_RunCurrentCue: 'Current cue',
-    cuesRun_RunResendEthernet: 'Resend Ethernet',
-    cuesRun_RunSubmit: 'Run',
-    cuesRun_RunSuccess: 'Run cues set successfully!',
+    cuesRun: 'Run cue',
+    cuesRun_Run: 'Run',
+    cuesRun_Explanation: 'Select a cue to be runned, or select "Disabled" to stop cue runs\nThe Resend Ethernet option change is live',
+    cuesRun_Select: 'Select cue',
+    cuesRun_CurrentCue: 'Current cue',
+    cuesRun_ResendEthernet: 'Resend Ethernet',
+    cuesRun_Submit: 'Run',
+    cuesRun_Success: 'Run cues set successfully!',
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',

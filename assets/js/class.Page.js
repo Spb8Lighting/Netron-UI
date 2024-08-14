@@ -1708,7 +1708,7 @@ export default class Page {
   page_cuesRun() {
     this.setTitle(word.page.cuesRun)
 
-    const form = this.getForm({ label: word.page.cuesRun_Run, explanation: word.page.cuesRun_RunExplanation })
+    const form = this.getForm({ label: word.page.cuesRun_Run, explanation: word.page.cuesRun_Explanation })
 
     const runCue = this.getInput({
       attr: attr.runCue,
@@ -1739,7 +1739,7 @@ export default class Page {
 
     form.fieldset.append(runCue, currentCue, cuesResendEth)
 
-    const button = this.getSubmit(word.page.cuesRun_RunSubmit)
+    const button = this.getSubmit(word.page.cuesRun_Submit)
 
     form.fieldset.append(button)
 
@@ -1774,7 +1774,7 @@ export default class Page {
       button: button,
       url: apis.runCues,
       callback: callback,
-      success: word.page.cuesRun_RunSuccess
+      success: word.page.cuesRun_Success
     })
 
     cuesResendEth.addEventListener('change', async e => {
