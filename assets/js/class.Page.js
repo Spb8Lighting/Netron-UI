@@ -282,7 +282,8 @@ export default class Page {
     const globalDiv = document.createElement('div')
     globalDiv.className = 'netron-table p-0 m-0 ms-auto me-auto'
 
-    const portPerTable = 4
+    // Check if there are more than 4 ports to display, if true, split the table in multiple tables
+    const portPerTable = this.#device.dmxPorts.length >= 4 ? 4 : this.#device.dmxPorts.length
 
     for (let t = 0; t < this.#device.dmxPorts.length; t += portPerTable) {
       const div = document.createElement('div')
@@ -753,10 +754,6 @@ export default class Page {
     }
 
     return `fa fa-fw ${icon}`
-  }
-
-  #breakpoint() {
-    return window.getComputedStyle(document.body, ':before').content.replace(/\"/g, '')
   }
 
   /**

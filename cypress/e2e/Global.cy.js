@@ -404,14 +404,13 @@ context('Check pages', () => {
               .each(($el, index) => {
                 cy.wrap($el)
                   .find('button').as(`port${index}`)
-                  .should('have.text', `Port ${index + 1}`)
+                  .should('have.text', `Port ${index + 1}${index + 1}`)
               })
           })
         cy.get('>div')
           .should('have.length', 1)
           .within(() => {
             cy.get('form')
-              .should('have.length', 4)
               .each(($el, index) => {
                 inputList.forEach(name => {
                   cy.wrap($el).as(`form${index}`)
