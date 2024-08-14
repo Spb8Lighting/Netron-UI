@@ -1,4 +1,13 @@
-export const devMode = 'NETRON EP1' // Set to false to go in production mode
+const activeDevMode = true // Set to false to go in production mode
+
+const devModes = ['NETRON EP1', 'NETRON EP2', 'NETRON EP4', 'NETRON EN4', 'NETRON EN12']
+
+const getRandomDevMode = () => {
+  const randomIndex = Math.floor(Math.random() * devModes.length)
+  return devModes[randomIndex]
+}
+
+export const devMode = activeDevMode ? getRandomDevMode() : ''
 
 /**
  * Configuration for application pages and menu items.
