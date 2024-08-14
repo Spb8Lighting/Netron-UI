@@ -294,15 +294,15 @@ export const attr = {
     desc: 'It allows to link a cue to another one'
   },
   nameCue: {
-    label: 'Name', icon: 'fa-font', attr: 'Name',
+    label: 'Name', icon: 'fa-font', attr: 'name',
     desc: 'It is the name of the cue'
   },
   fadeTimeCue: {
-    label: 'Fade time', icon: 'fa-arrow-up-wide-short', attr: 'FadeTime',
+    label: 'Fade time', icon: 'fa-arrow-up-wide-short', attr: 'fadeTime',
     desc: 'Set the fade time of the cue'
   },
   holdTimeCue: {
-    label: 'Hold time', icon: 'fa-clock', attr: 'HoldTime',
+    label: 'Hold time', icon: 'fa-clock', attr: 'holdTime',
     desc: 'Set the time to hold the cue until the next (linked) cue is started'
   },
   cuesResendEth: {

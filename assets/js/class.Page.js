@@ -412,44 +412,6 @@ export default class Page {
   }
 
   /**
-   * Converts the given number of seconds to a formatted time string.
-   * 
-   * @param {number} seconds - The number of seconds to convert.
-   * @returns {string} The formatted time string in the format HH:MM:SS.
-   */
-  #secondsToTimeInput(seconds) {
-    // Calculate hours, minutes, and seconds
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-
-    // Format hours, minutes, and seconds as HH:MM:SS
-    const formattedTime = [
-      hours.toString().padStart(2, '0'),
-      minutes.toString().padStart(2, '0'),
-      secs.toString().padStart(2, '0')
-    ].join(':')
-
-    return formattedTime
-  }
-
-  /**
-   * Converts a time string to the total number of seconds.
-   *
-   * @param {string} timeString - The time string in the format "HH:MM:SS".
-   * @returns {number} The total number of seconds.
-   */
-  #timeInputToSeconds(timeString) {
-    // Split the time string into hours, minutes, and seconds
-    const [hours, minutes, seconds] = timeString.split(':').map(Number)
-
-    // Calculate the total seconds
-    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds
-
-    return totalSeconds
-  }
-
-  /**
  * Creates an input element based on provided attributes and options
  * 
  * @param {Object} params - The parameters for creating the input
@@ -521,7 +483,7 @@ export default class Page {
           input.autocomplete = 'off'
           input.className = 'form-control'
           if (subtype === 'time') {
-            input.value = defaultValue ? this.#secondsToTimeInput(defaultValue) : '00:00:00'
+            input.value = defaultValue ? this.#translate.secondsToTimeInput(defaultValue) : '00:00:00'
           } else {
             input.value = defaultValue
           }
@@ -1967,8 +1929,8 @@ export default class Page {
     const list = [
       { key: 'idx', elem: idx },
       { key: 'Name', elem: name },
-      { key: 'fadeTime', elem: fadeTime, precall: this.#timeInputToSeconds },
-      { key: 'holdTime', elem: holdTime, precall: this.#timeInputToSeconds },
+      { key: 'fadeTime', elem: fadeTime, precall: this.#translate.timeInputToSeconds },
+      { key: 'holdTime', elem: holdTime, precall: this.#translate.timeInputToSeconds },
       { key: 'linkCue', elem: linkCue }
     ]
 
@@ -2019,8 +1981,8 @@ export default class Page {
       } else if (e.target.name === 'idx') {
         const cueIndex = Number(e.target.value) - 1
         name.children[1].value = this.#device.cues[cueIndex].name
-        fadeTime.children[1].value = this.#secondsToTimeInput(this.#device.cues[cueIndex].fadeTime)
-        holdTime.children[1].value = this.#secondsToTimeInput(this.#device.cues[cueIndex].holdTime)
+        fadeTime.children[1].value = this.#translate.secondsToTimeInput(this.#device.cues[cueIndex].fadeTime)
+        holdTime.children[1].value = this.#translate.secondsToTimeInput(this.#device.cues[cueIndex].holdTime)
         linkCue.children[1].value = this.#device.cues[cueIndex].linkCue
         updateVisibilityAndValues()
       }

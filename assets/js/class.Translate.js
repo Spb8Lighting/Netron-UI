@@ -37,6 +37,55 @@ export default class Translate {
   }
 
   /**
+  * Converts the given number of seconds to a formatted time string.
+  * 
+  * @param {number} seconds - The number of seconds to convert.
+  * @returns {string} The formatted time string in the format HH:MM:SS.
+  */
+  secondsToTimeInput(seconds) {
+    // Calculate hours, minutes, and seconds
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    // Format hours, minutes, and seconds as HH:MM:SS
+    const formattedTime = [
+      hours.toString().padStart(2, '0'),
+      minutes.toString().padStart(2, '0'),
+      secs.toString().padStart(2, '0')
+    ].join(':')
+
+    return formattedTime
+  }
+
+  /**
+   * Converts a time string to the total number of seconds.
+   *
+   * @param {string} timeString - The time string in the format "HH:MM:SS".
+   * @returns {number} The total number of seconds.
+   */
+  timeInputToSeconds(timeString) {
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
+
+    // Calculate the total seconds
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds
+
+    return totalSeconds
+  }
+
+  linkCue({ value }) {
+    return value !== 0 ? value : this.#empty
+  }
+
+  fadeTime({ value }) {
+    return this.secondsToTimeInput(value)
+  }
+  holdTime({ value }) {
+    return this.fadeTime({ value })
+  }
+
+  /**
    * Replaces occurrences of search values in the text with replacement values.
    * @param {Object} params - The parameters for text replacement.
    * @param {string} params.text - The text to perform replacements on.
