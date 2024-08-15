@@ -25,6 +25,9 @@ export default class Page {
     dmxProtocol: [
       { regex: regex.sACN, label: word.sACN },
       { regex: regex.ArtNet, label: word.ArtNet }
+    ],
+    ipMode: [
+      { regex: regex.automatic, label: word.automatic },
     ]
   }
 
