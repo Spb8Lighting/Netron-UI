@@ -402,8 +402,9 @@ export const timing = {
 }
 
 export const regex = {
-  ArtNet: /art-?net/i,
-  sACN: /sacn/i,
+  ArtNet: /(art-?net)/i,
+  sACN: /(sacn)/i,
+  automatic: /(automatic)/i,
 }
 
 /**

@@ -25,6 +25,9 @@ export default class Page {
     dmxProtocol: [
       { regex: regex.sACN, label: word.sACN },
       { regex: regex.ArtNet, label: word.ArtNet }
+    ],
+    ipMode: [
+      { regex: regex.automatic, label: word.automatic },
     ]
   }
 
@@ -1608,9 +1611,7 @@ export default class Page {
       options: this.#translate.getAddressmode(),
       defaultValue: this.#device.IP.addressmode,
       disableIndexInLabel: true,
-      optgroup: [
-        { index: new Set([1, 2, 4, 5]), label: word.automatic }
-      ]
+      optgroup: this.#optGroup.ipMode
     })
 
     /**
