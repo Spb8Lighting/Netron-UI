@@ -1063,6 +1063,7 @@ export default class Page {
       minLength: 1,
       maxLength: 12,
       required: true,
+      disabled: (this.#device.userPresets[0].Owner !== 0),
       defaultValue: this.#device.userPresets[0].name
     })
 
@@ -1079,7 +1080,12 @@ export default class Page {
       }
       const selectedOption = e.target.selectedOptions[0]
       if (selectedOption.dataset.name !== undefined) {
-        PresetName.querySelector('input').value = selectedOption.dataset.name
+        PresetName.children[1].value = selectedOption.dataset.name
+        if (selectedOption.disabled) {
+          this.#disabledElem({ elem: PresetName, disabled: true })
+        } else {
+          this.#disabledElem({ elem: PresetName })
+        }
       }
     })
 
