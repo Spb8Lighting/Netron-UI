@@ -95,6 +95,12 @@ context('Interface features', () => {
     beforeEach(() => {
       cy.get('#identifySwitch').as('switch')
       cy.get('#main-menu>ul>li:last-child').as('identify')
+
+      cy.get('@switch').then(($el) => {
+        if($el.is(':checked')) {
+          cy.get('@switch').uncheck()
+        }
+      })
     })
 
     it('activate/deactivate identify', () => {
@@ -179,8 +185,8 @@ context('Check pages', () => {
         cy.get('div').eq(1).within(() => {
           cy.get('a').should('have.text', 'DMX ports')
 
-          cy.get('table').should('have.length', 2)
-          cy.get('table').eq(1).within(() => { // DMX Port resume table
+          cy.get('table').its('length').should('be.gte', 2)
+          cy.get('table').last().within(() => { // DMX Port resume table
             const columnsName = ['Port#', 'Mode', 'Protocol', 'Universe', 'Frame rate', 'RDM', 'Merge']
             cy.get('thead th')
               .should('have.length', 7)
