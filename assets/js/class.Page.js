@@ -761,9 +761,9 @@ export default class Page {
  * @param {HTMLElement|HTMLElement[]} params.elem - Element or array of elements to be disabled
  * @param {boolean} [params.disabled=false] - Whether to disable or enable the elements
  */
-  disabledElem({ elem, disabled = false }) {
+  #disabledElem({ elem, disabled = false }) {
     if (Array.isArray(elem)) {
-      elem.forEach(el => this.disabledElem({ elem: el, disabled: disabled }))
+      elem.forEach(el => this.#disabledElem({ elem: el, disabled: disabled }))
     } else {
       let input = elem.children[1]
       if (input) {
@@ -994,12 +994,12 @@ export default class Page {
         const toHide = JSON.parse(selectedOption.dataset.hide)
         toHide.forEach(elem => {
           const nodeToHide = document.getElementById(elem).parentNode
-          this.disabledElem({ elem: nodeToHide, disabled: true })
+          this.#disabledElem({ elem: nodeToHide, disabled: true })
         })
       } else {
         const nodeToReveal = form.form.querySelectorAll('.d-none')
         nodeToReveal.forEach(elem => {
-          this.disabledElem({ elem: elem })
+          this.#disabledElem({ elem: elem })
         })
       }
       if (selectedOption.dataset.universe !== undefined) {
@@ -1512,17 +1512,17 @@ export default class Page {
        * Updates the visibility and enabled/disabled state of form inputs based on the current mode
        */
       const updateVisibilityAndValues = () => {
-        this.disabledElem({ elem: allInputs, disabled: true })
+        this.#disabledElem({ elem: allInputs, disabled: true })
         switch (Number(ptMode.children[1].value)) {
           case 0: // Disable
-            this.disabledElem({
+            this.#disabledElem({
               elem: [
                 PortSettingsTitle, ptMode
               ]
             })
             break
           case 1: // Input
-            this.disabledElem({
+            this.#disabledElem({
               elem: [
                 PortSettingsTitle, ptMode, ptUniverse,
                 InputOuputTitle, ptProtocol,
@@ -1532,13 +1532,13 @@ export default class Page {
             break
           case 2: // Output
             if (Number(ptClonePort.children[1].value) !== i) { // Port is cloning another port
-              this.disabledElem({
+              this.#disabledElem({
                 elem: [
                   PortSettingsTitle, ptClonePort
                 ]
               })
             } else {
-              this.disabledElem({
+              this.#disabledElem({
                 elem: [
                   PortSettingsTitle, ptClonePort, ptMode, ptUniverse,
                   InputOuputTitle, ptProtocol, ptFramerate, ptRDM,
@@ -1547,15 +1547,15 @@ export default class Page {
                 ]
               })
               if (Number(ptMergeMode.children[1].value) !== 0) { // !Off
-                this.disabledElem({ elem: [ptMergeUniverse, ptResendProtocol] })
+                this.#disabledElem({ elem: [ptMergeUniverse, ptResendProtocol] })
                 if (Number(ptResendProtocol.children[1].value) !== 2) { // !None
-                  this.disabledElem({ elem: ptResendUniverse })
+                  this.#disabledElem({ elem: ptResendUniverse })
                 }
               }
             }
             break
           case 3: // Send value
-            this.disabledElem({
+            this.#disabledElem({
               elem: [
                 PortSettingsTitle, ptMode,
                 DMXRangeTitle, ptSendValue, ptFramerate, ptRangeFrom, ptRangeTo, ptOffsetAddr
@@ -1634,9 +1634,9 @@ export default class Page {
     const updateVisibilityAndValues = () => {
       const nodeToHide = [ipaddress, netmask]
       if (Number(addressmode.children[1].value) === 3) { // Custom IP
-        this.disabledElem({ elem: nodeToHide })
+        this.#disabledElem({ elem: nodeToHide })
       } else {
-        this.disabledElem({ elem: nodeToHide, disabled: true })
+        this.#disabledElem({ elem: nodeToHide, disabled: true })
       }
     }
 
@@ -1963,12 +1963,12 @@ export default class Page {
       })
 
       if (selectedLinkCueValue === 0 || selectedLinkCueValue === selectedIdxValue) {
-        this.disabledElem({
+        this.#disabledElem({
           elem: holdTime,
           disabled: true
         })
       } else {
-        this.disabledElem({
+        this.#disabledElem({
           elem: holdTime
         })
       }
