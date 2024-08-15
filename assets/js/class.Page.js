@@ -421,7 +421,6 @@ export default class Page {
  * @param {string} [params.label] - Label text for the input
  * @param {string} [params.icon] - Icon class to be added to the label
  * @param {string} [params.id] - ID for the input element
- * @param {string} [params.name] - Name attribute for the input
  * @param {string} [params.type] - Type of the input ('input' or 'select')
  * @param {string} [params.subtype] - Subtype of the input ('text', 'checkbox', etc.)
  * @param {number} [params.minLength] - Minimum length for text inputs
@@ -437,7 +436,9 @@ export default class Page {
  * 
  * @returns {HTMLDivElement} The created `<div>` element containing the input element
  */
-  getInput({ disabled, attr, disableIndexInLabel, label, icon, id, name, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
+  getInput({ disabled, attr, disableIndexInLabel, label, icon, id, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
+    let alreadySelected = false
+
     const div = document.createElement('div')
     div.className = 'input-group'
 
@@ -550,14 +551,16 @@ export default class Page {
           if (hide && option.hidden === 1) {
             opt.dataset.hide = JSON.stringify(hide)
           }
-          if (defaultValue === undefined) {
+          if (!alreadySelected) {
+            if (defaultValue === undefined) { // If no default value, select the first option
             if (i === 0) {
               opt.selected = true
+                alreadySelected = true
             }
-          } else if (
-            defaultValue === option.value || defaultValue === i
-          ) {
+            } else if (defaultValue === option.value || defaultValue === i) {
+              alreadySelected = true
             opt.selected = true
+          }
           }
           listOption.set(i, opt)
           input.append(opt)
