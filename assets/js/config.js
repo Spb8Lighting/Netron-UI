@@ -401,6 +401,11 @@ export const timing = {
   runCues: 1000
 }
 
+export const regex = {
+  ArtNet: /art-?net/i,
+  sACN: /sacn/i,
+}
+
 /**
  * This is display value for empty parameter
  * 

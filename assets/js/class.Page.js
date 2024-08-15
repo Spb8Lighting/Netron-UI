@@ -1,6 +1,6 @@
 import MobileKeyboard from 'MobileKeyboard'
 import Translate from 'Translate'
-import { EventName, config, attr, word, apis, timing } from 'config'
+import { EventName, config, attr, word, apis, timing, regex } from 'config'
 
 export default class Page {
 
@@ -20,6 +20,13 @@ export default class Page {
   }
 
   #alertTimeOut = {}
+
+  #optGroup = {
+    dmxProtocol: [
+      { regex: regex.sACN, label: word.sACN },
+      { regex: regex.ArtNet, label: word.ArtNet }
+    ]
+  }
 
   #pageTitle = document.getElementById('pageTitle')
   #pageContent = document.getElementById('pageContent')
@@ -567,12 +574,16 @@ export default class Page {
           input.append(opt)
         })
 
-        if (optgroup) {
-          for (const group of optgroup) {
+        if (optgroup) { // If there are optgroups, create them and append the options
+          for (const groupLabel of optgroup) {
             const opt = document.createElement('optgroup')
-            opt.label = group.label
-            group.index.forEach(value => {
-              opt.append(listOption.get(value))
+            opt.label = groupLabel.label
+
+            listOption.forEach(option => {
+              if (option.innerText.match(groupLabel.regex)) { // If the option matches the regex
+                option.innerText = option.innerText.replace(groupLabel.regex, groupLabel.label) // Replace the regex with nothing
+                opt.append(option)
+              }
             })
             input.prepend(opt)
           }
@@ -796,7 +807,7 @@ export default class Page {
       3: 'fa-volume-high', // Send value
     }
 
-    let icon = iconMap[port.ptMode] || 'fa-ban' // Default to 'Disable' icon
+    let icon = iconMap[port.ptMode] || iconMap[0] // Default to 'Disable' icon
 
     if (this.#translate.isClonedPort({ portID, port })) {
       icon = 'fa-clone'
@@ -919,10 +930,7 @@ export default class Page {
       type: 'select',
       options: this.#device.presets,
       specific: 'universe',
-      optgroup: [
-        { index: new Set([7, 8, 9, 10, 11, 12]), label: word.sACN },
-        { index: new Set([0, 1, 2, 3, 4, 5, 6]), label: word.ArtNet }
-      ],
+      optgroup: this.#optGroup.dmxProtocol,
       hide: ['universe']
     })
 
