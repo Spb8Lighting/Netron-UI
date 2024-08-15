@@ -179,7 +179,8 @@ export default class Translate {
    * @returns {string} - The formatted time string.
    */
   OnTime({ value }) {
-    const realValue = Number(value.slice(0, -1))
+    const match = value.match(/\d+/)
+    const realValue = match ? Number(match[0]) : 0
     const days = Math.floor(realValue / 24)
     const weeks = Math.floor(days / 7)
     return this.replaceText({
