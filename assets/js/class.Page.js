@@ -329,6 +329,7 @@ export default class Page {
         switch (port.ptMode) {
           case 0: // Disable
             td.innerText = 'X'
+            td.className = 'text-red'
             break
           case 1: // Input
             td.innerText = 'i' + this.#translate.ptUniverse({ value: port.ptUniverse, line: port }).toString().padStart(3, '0')

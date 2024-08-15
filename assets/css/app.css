@@ -123,6 +123,14 @@ body>div,
   width: calc(150px / 4);
 }
 
+.netron-table .text-red {
+  color: red
+}
+
+.netron-table .background-red {
+  background-color: red
+}
+
 .netron-table .background-green {
   background-color: green
 }
