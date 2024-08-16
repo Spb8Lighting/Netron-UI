@@ -138,7 +138,7 @@ export const word = {
     cuesOptions_Explanation: 'Select a cue to access its prorperties',
     cuesOptions_Select: 'Select cue',
     cuesOptions_Timing: 'Time format is HH:MM:SS',
-    cuesOptions_Submit: 'Load',
+    cuesOptions_Submit: 'Save',
     cuesOptions_Success: 'Cue options modified successfully!',
     cuesList: 'Cuelist',
     cuesList_Cuelist: 'Cuelist n°%1', // %1 = cuelist ID

@@ -448,8 +448,6 @@ export default class Page {
  * @returns {HTMLDivElement} The created `<div>` element containing the input element
  */
   getInput({ disabled, attr, disableIndexInLabel, label, icon, id, type, subtype, minLength, maxLength, min, max, defaultValue, options, optgroup, required, hide, specific }) {
-    let alreadySelected = false
-
     const div = document.createElement('div')
     div.className = 'input-group'
 
@@ -562,16 +560,12 @@ export default class Page {
           if (hide && option.hidden === 1) {
             opt.dataset.hide = JSON.stringify(hide)
           }
-          if (!alreadySelected) {
             if (defaultValue === undefined) { // If no default value, select the first option
             if (i === 0) {
               opt.selected = true
-                alreadySelected = true
             }
-            } else if (defaultValue === option.value || defaultValue === i) {
-              alreadySelected = true
+          } else if (defaultValue === option.value || (!option.value && defaultValue === i)) {
             opt.selected = true
-          }
           }
           listOption.set(i, opt)
           input.append(opt)
