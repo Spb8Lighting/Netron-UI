@@ -31,6 +31,30 @@ export default class Page {
     ]
   }
 
+  #input = {
+    universe: {
+      type: 'input',
+      subtype: 'number',
+      required: true,
+      min: 1,
+      max: 32767
+    },
+    dmx: {
+      type: 'input',
+      subtype: 'number',
+      required: true,
+      min: 1,
+      max: 512
+    },
+    send: {
+      type: 'input',
+      subtype: 'number',
+      required: true,
+      min: 0,
+      max: 255
+    }
+  }
+
   #pageTitle = document.getElementById('pageTitle')
   #pageContent = document.getElementById('pageContent')
 
@@ -560,7 +584,7 @@ export default class Page {
           if (hide && option.hidden === 1) {
             opt.dataset.hide = JSON.stringify(hide)
           }
-            if (defaultValue === undefined) { // If no default value, select the first option
+          if (defaultValue === undefined) { // If no default value, select the first option
             if (i === 0) {
               opt.selected = true
             }
@@ -814,6 +838,88 @@ export default class Page {
   }
 
   /**
+   * Gets the appropriate icon class for a given input port based on its Event Type
+   * @param {Object} params - The parameters for determining the port icon
+   * @param {Object} params.port - The port object
+   * @returns {string} The Font Awesome icon class for the port
+   */
+  #getInputPortIcon({ port }) {
+    const iconMap = {
+      0: 'fa-ban', // Disable DMX
+      1: config.cues.icon, // Cue
+      2: config.presets.icon, // Netron preset
+      3: config.presets.icon, // User preset
+      4: 'fa-volume-high', // Send value
+    }
+
+    let icon = iconMap[port.rmActionEvent] || iconMap[0] // Default to 'Disable' icon
+
+    return `fa fa-fw ${icon}`
+  }
+
+  /**
+   * Generates a tab element for the navigation menu.
+   *
+   * @param {Object} options - The options for the tab.
+   * @param {number} options.index - The index of the tab.
+   * @param {string} options.id - The ID of the tab.
+   * @param {string} options.icon - The CSS class for the tab icon.
+   * @param {string} options.text - The text content of the tab with %1 as a placeholder for the index.
+   * @returns {Object} - An object containing the generated elements.
+   */
+  #getTab({ index, id, icon, text }) {
+    const li = document.createElement('li')
+    li.className = 'nav-item align-self-stretch flex-fill'
+    li.role = 'presentation'
+
+    const iconElement = document.createElement('i')
+    iconElement.className = icon
+
+    const link = document.createElement('button')
+    link.type = 'button'
+    link.className = `nav-link${index === 0 ? ' active' : ''}`
+    link.role = 'tab'
+    link.dataset.bsToggle = 'tab'
+    link.dataset.bsTarget = `#${id}${index}`
+    link.ariaControls = link.dataset.bsTarget
+    link.id = `${id}${index}-tab`
+
+    const spanFull = document.createElement('span')
+    spanFull.className = 'full'
+    spanFull.innerText = this.#translate.replaceText({ text: text, search: { '%1': index + 1 } })
+
+    const spanSmall = document.createElement('span')
+    spanSmall.className = 'break'
+    spanSmall.innerText = index + 1
+
+    link.append(spanFull, spanSmall)
+
+    link.prepend(iconElement)
+    li.append(link)
+
+    return { li, link, iconElement }
+  }
+
+  /**
+   * Generates the tab pane element based on the provided index and id.
+   * 
+   * @param {Object} options - The options for retrieving the tab pane.
+   * @param {number} options.index - The index of the tab pane.
+   * @param {string} options.id - The id of the tab pane.
+   * @returns {HTMLElement} The tab pane element.
+   */
+  #getTabPane({ index, id }) {
+    const form = this.getForm({ id: id })
+    form.form.className = `tab-pane fade pt-2${index === 0 ? ' show active' : ''}`
+    form.form.dataset.idx = index + 1
+    form.form.role = 'tabpanel'
+    form.form.tabIndex = 0
+    form.form.ariaLabelledby = id
+
+    return form
+  }
+
+  /**
    * Handles the display of a 404 page not found error
    * 
    * @param {string} pageRequest - The page request that could not be found
@@ -934,10 +1040,7 @@ export default class Page {
     const startUniverse = this.getInput({
       attr: attr.startUniverse,
       id: 'universe',
-      type: 'input',
-      subtype: 'number',
-      min: 1,
-      max: 32767,
+      ...this.#input.universe,
       defaultValue: this.#translate.ptUniverse({
         value: this.#device.presets[0].universe,
         line: {
@@ -1124,51 +1227,6 @@ export default class Page {
  * This method creates tabs for each DMX port, allowing the user to configure various settings
  */
   page_dmxPorts() {
-    // Helper function to create a tab
-    const createTab = ({ port, index }) => {
-      const li = document.createElement('li')
-      li.className = 'nav-item align-self-stretch flex-fill'
-      li.role = 'presentation'
-
-      const portIcon = document.createElement('i')
-      portIcon.className = this.#getPortIcon({ port: port, portID: index })
-
-      const link = document.createElement('button')
-      link.type = 'button'
-      link.className = `nav-link${index === 0 ? ' active' : ''}`
-      link.role = 'tab'
-      link.dataset.bsToggle = 'tab'
-      link.dataset.bsTarget = `#dmxPort${index}`
-      link.ariaControls = link.dataset.bsTarget
-      link.id = `dmxPort${index}-tab`
-
-      const spanFull = document.createElement('span')
-      spanFull.className = 'full'
-      spanFull.innerText = this.#translate.replaceText({ text: word.page.dmxPorts_Tab, search: { '%1': index + 1 } })
-
-      const spanSmall = document.createElement('span')
-      spanSmall.className = 'break'
-      spanSmall.innerText = index + 1
-
-      link.append(spanFull, spanSmall)
-
-      link.prepend(portIcon)
-      li.append(link)
-
-      return { li, link, portIcon }
-    }
-    // Helper function to create a form
-    const createForm = ({ port, index, formID }) => {
-      const form = this.getForm({ id: formID })
-      form.form.className = `tab-pane fade pt-2${index === 0 ? ' show active' : ''}`
-      form.form.dataset.idx = index + 1
-      form.form.role = 'tabpanel'
-      form.form.tabIndex = 0
-      form.form.ariaLabelledby = formID
-
-      return form
-    }
-
     this.setTitle(word.page.dmxPorts)
 
     const ul = document.createElement('ul')
@@ -1184,13 +1242,21 @@ export default class Page {
 
     this.#device.dmxPorts.forEach((port, i) => {
       // Generate Tab for navigation
-      const { li, link, portIcon } = createTab({ port: port, index: i })
+      const { li, link, iconElement } = this.#getTab({
+        index: i,
+        id: 'dmxPort',
+        icon: this.#getPortIcon({ port: port, portID: i }),
+        text: word.page.dmxPorts_Tab
+      })
       ul.append(li)
 
-      nodes.portIcon[i] = portIcon
+      nodes.portIcon[i] = iconElement
 
       // Generate Pane
-      const form = createForm({ port: port, index: i, formID: link.dataset.bsTarget.substring(1) })
+      const form = this.#getTabPane({
+        index: i,
+        id: link.dataset.bsTarget.substring(1)
+      })
       div.append(form.form)
 
       /** Settings */
@@ -1249,10 +1315,7 @@ export default class Page {
       const ptUniverse = this.getInput({
         attr: attr.ptUniverse,
         id: `${form.form.id}ptUniverse`,
-        type: 'input',
-        subtype: 'number',
-        min: 1,
-        max: 32767,
+        ...this.#input.universe,
         defaultValue: this.#translate.ptUniverse({
           value: port.ptUniverse,
           line: port
@@ -1275,10 +1338,7 @@ export default class Page {
       const ptMergeUniverse = this.getInput({
         attr: attr.ptMergeUniverse,
         id: `${form.form.id}ptMergeUniverse`,
-        type: 'input',
-        subtype: 'number',
-        min: 1,
-        max: 32767,
+        ...this.#input.universe,
         defaultValue: this.#translate.ptMergeUniverse({
           value: port.ptMergeUniverse,
           line: port
@@ -1297,10 +1357,7 @@ export default class Page {
       const ptResendUniverse = this.getInput({
         attr: attr.ptResendUniverse,
         id: `${form.form.id}ptResendUniverse`,
-        type: 'input',
-        subtype: 'number',
-        min: 1,
-        max: 32767,
+        ...this.#input.universe,
         defaultValue: this.#translate.ptResendUniverse({
           value: port.ptResendUniverse,
           line: { ...port, ptProtocol: undefined }
@@ -1314,10 +1371,7 @@ export default class Page {
       const ptSendValue = this.getInput({
         attr: attr.ptSendValue,
         id: `${form.form.id}ptSendValue`,
-        type: 'input',
-        subtype: 'number',
-        min: 0,
-        max: 255,
+        ...this.#input.send,
         defaultValue: port.ptSendValue
       })
 
@@ -1333,20 +1387,14 @@ export default class Page {
       const ptRangeFrom = this.getInput({
         attr: attr.ptRangeFrom,
         id: `${form.form.id}ptRangeFrom`,
-        type: 'input',
-        subtype: 'number',
-        min: 1,
-        max: 512,
+        ...this.#input.dmx,
         defaultValue: port.ptRangeFrom
       })
 
       const ptRangeTo = this.getInput({
         attr: attr.ptRangeTo,
         id: `${form.form.id}ptRangeTo`,
-        type: 'input',
-        subtype: 'number',
-        min: 1,
-        max: 512,
+        ...this.#input.dmx,
         defaultValue: port.ptRangeTo
       })
 
@@ -2092,6 +2140,11 @@ export default class Page {
     return cuelists
   }
 
+  /**
+   * Renders the cues list page.
+   * 
+   * @returns {void}
+   */
   page_cuesList() {
     this.setTitle(word.page.cuesList)
 
@@ -2119,7 +2172,244 @@ export default class Page {
 
       this.#pageContent.append(cuelistTitle, cuelistTable)
     })
+  }
 
+  page_inputs() {
+    this.setTitle(word.page.inputs)
+
+    const ul = document.createElement('ul')
+    ul.className = 'nav nav-tabs'
+    ul.role = 'tablist'
+
+    const div = document.createElement('div')
+    div.className = 'tab-content'
+
+    const nodes = {
+      portIcon: []
+    }
+
+    this.#device.remoteInputs.forEach((port, i) => {
+      // Generate Tab for navigation
+      const { li, link, iconElement } = this.#getTab({
+        index: i,
+        id: 'inputPort',
+        icon: this.#getInputPortIcon({ port: port }),
+        text: word.page.inputs_Tab
+      })
+      ul.append(li)
+
+      nodes.portIcon[i] = iconElement
+
+      // Generate Pane
+      const form = this.#getTabPane({
+        index: i,
+        id: link.dataset.bsTarget.substring(1)
+      })
+
+      div.append(form.form)
+
+      const rmActionEvent = this.getInput({
+        attr: attr.rmActionEvent,
+        id: `${form.form.id}rmActionEvent`,
+        type: 'select',
+        options: this.#translate.getRmActionEvent(true),
+        defaultValue: port.rmActionEvent,
+        disableIndexInLabel: true
+      })
+
+      const TriggerTitle = this.getBlockTitle(word.page.inputs_Trigger)
+      TriggerTitle.classList.add('mt-2')
+
+      const rmTriggerSource = this.getInput({
+        attr: attr.rmTriggerSource,
+        id: `${form.form.id}rmTriggerSource`,
+        type: 'select',
+        options: this.#translate.getRmTriggerSource(true),
+        defaultValue: port.rmTriggerSource,
+        disableIndexInLabel: true
+      })
+
+      const getPorts = () => {
+        return this.#device.dmxPorts.map((port, index) => {
+          const name = this.#translate.replaceText({ text: word.page.inputs_Port, search: { '%1': index + 1 } })
+          // Deactivate the port if not in input mode
+          if (port.ptMode !== 1) {
+            return { name: `${word.warning} ${name}`, desc: this.#translate.replaceText({ text: word.page.inputs_PortModeWarning, search: { '%1': index + 1 } }) }
+          }
+          return { name: name }
+        })
+      }
+
+      const rmSourcePort = this.getInput({
+        attr: attr.rmSourcePort,
+        id: `${form.form.id}rmSourcePort`,
+        type: 'select',
+        defaultValue: port.rmSourcePort,
+        options: getPorts(),
+        disableIndexInLabel: true
+      })
+
+      const rmSourceUniverse = this.getInput({
+        attr: attr.rmSourceUniverse,
+        id: `${form.form.id}rmSourceUniverse`,
+        ...this.#input.universe,
+        defaultValue: this.#translate.rmSourceUniverse({
+          value: port.rmSourceUniverse,
+          line: port
+        })
+      })
+
+      const rmSourceAddress = this.getInput({
+        attr: attr.rmSourceAddress,
+        id: `${form.form.id}rmSourceaddress`,
+        ...this.#input.dmx,
+        defaultValue: port.rmSourceaddress,
+        disableIndexInLabel: true
+      })
+
+      const TypeTitle = this.getBlockTitle(word.page.inputs_Type)
+      TypeTitle.classList.add('mt-2')
+
+      const rmActSendValue = this.getInput({
+        attr: attr.rmActSendValue,
+        id: `${form.form.id}rmActSendValue`,
+        ...this.#input.send,
+        defaultValue: port.rmActSendValue,
+        disableIndexInLabel: true
+      })
+
+      const rmActCueNum = this.getInput({
+        attr: attr.rmActCueNum,
+        id: `${form.form.id}rmActCueNum`,
+        type: 'select',
+        options: [
+          { name: 'No cue' },
+          ...this.#device.cues.map((cue, index) => ({ name: `${index + 1}: ${cue.name}` }))
+        ],
+        defaultValue: port.rmActCueNum,
+        disableIndexInLabel: true
+      })
+
+      const rmActCueMode = this.getInput({
+        attr: attr.rmActCueMode,
+        id: `${form.form.id}rmActCueMode`,
+        type: 'select',
+        options: this.#translate.getRmActCueMode(true),
+        defaultValue: port.rmActCueMode,
+        disableIndexInLabel: true
+      })
+
+      const rmActPresetNum = this.getInput({
+        attr: attr.rmActPresetNum,
+        id: `${form.form.id}rmActPresetNum`,
+        type: 'select',
+        options: this.#device.presets,
+        optgroup: this.#optGroup.dmxProtocol,
+        defaultValue: port.rmActPresetNum,
+      })
+
+      const rmActUserPresetNum = this.getInput({
+        attr: attr.rmActUserPresetNum,
+        id: `${form.form.id}rmActUserPresetNum`,
+        type: 'select',
+        options: this.#device.userPresets,
+        defaultValue: port.rmActUserPresetNum
+      })
+
+      const button = this.getSubmit('Save')
+
+      const allInputs = [
+        rmActionEvent,
+        TypeTitle, rmActCueNum, rmActCueMode, rmActSendValue, rmActPresetNum, rmActUserPresetNum,
+        TriggerTitle, rmTriggerSource, rmSourcePort, rmSourceUniverse, rmSourceAddress
+      ]
+
+      form.fieldset.append(...allInputs, button)
+
+      /**
+      * Updates the visibility and values of elements based on selected options.
+      */
+      const updateVisibility = () => {
+        this.#disabledElem({ elem: allInputs, disabled: true })
+        this.#disabledElem({ elem: [rmActionEvent, TriggerTitle, rmTriggerSource] })
+        switch (Number(rmTriggerSource.children[1].value)) { // Trigger Source
+          case 0: // Disable
+            break
+          case 1: // DMX Port
+            this.#disabledElem({ elem: [rmSourcePort, rmSourceAddress] })
+            break
+          case 2: //Artnet
+          case 3: //sACN
+            this.#disabledElem({ elem: [rmSourceUniverse, rmSourceAddress] })
+            break
+        }
+        switch (Number(rmActionEvent.children[1].value)) { // Event Type
+          case 0: // Disable DMX
+            break
+          case 1: // Cue
+            this.#disabledElem({ elem: [TypeTitle, rmActCueNum, rmActCueMode] })
+            break
+          case 2: // Netron preset
+            this.#disabledElem({ elem: [TypeTitle, rmActPresetNum] })
+            break
+          case 3: // User preset
+            this.#disabledElem({ elem: [TypeTitle, rmActUserPresetNum] })
+            break
+          case 4: // Send value
+            this.#disabledElem({ elem: [TypeTitle, rmActSendValue] })
+            break
+        }
+      }
+
+      updateVisibility()
+
+      form.form.addEventListener('change', updateVisibility)
+
+      /**
+       * Handles the form submission callback
+       * @param {FormData} formData - The form data to process
+       * @returns {string|false} Error message if there is an error, otherwise false
+       */
+      const callback = formData => {
+        for (const [key, val] of formData.entries()) {
+          if (key !== 'idx' && key !== 'EndFlag') { // Do not try to update non existing thing
+            this.#device.remoteInputs[i][key] = Number(val)
+          }
+        }
+        nodes.portIcon[i].className = this.#getInputPortIcon({ port: port }) // Update Port Icon
+      }
+
+      /**
+      * List of form elements and their corresponding preprocessing functions.
+      * @type {Array<{key: string, elem: HTMLElement, precall?: Function}>}
+      */
+      const list = [
+        { key: 'idx', directValue: form.form.dataset.idx },
+        { key: 'rmActionEvent', elem: rmActionEvent },
+        { key: 'rmActCueNum', elem: rmActCueNum },
+        { key: 'rmActCueMode', elem: rmActCueMode },
+        { key: 'rmActPresetNum', elem: rmActPresetNum },
+        { key: 'rmActUserPresetNum', elem: rmActUserPresetNum },
+        { key: 'rmActSendValue', elem: rmActSendValue },
+        { key: 'rmTriggerSource', elem: rmTriggerSource },
+        { key: 'rmSourcePort', elem: rmSourcePort },
+        { key: 'rmSourceaddress', elem: rmSourceAddress },
+        { key: 'rmSourceUniverse', elem: rmSourceUniverse, precall: (value, formData) => this.#translate.rmSourceUniverse({ device: true, value: value, line: { rmTriggerSource: formData.get('rmTriggerSource') } }) }
+      ]
+
+      this.sendForm({
+        list: list,
+        form: form.form,
+        button: button,
+        url: apis.saveInput,
+        callback: callback,
+        success: this.#translate.replaceText({
+          text: word.page.inputs_Success,
+          search: { '%1': i + 1 }
+        })
+      })
+    })
+    this.#pageContent.append(ul, div)
   }
 
   /**

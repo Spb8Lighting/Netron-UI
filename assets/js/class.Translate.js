@@ -18,17 +18,28 @@ export default class Translate {
   }
 
   /**
-   * Dynamically creates translation methods based on the `translate` configuration.
+   * Dynamically creates translation methods based on the `translate` configuration (taking into account the restricted values)
    */
   #createTranslateMethods() {
     for (const attr in translate) {
+      console.log(translate[attr])
       const methodName = `get${attr.charAt(0).toUpperCase()}${attr.slice(1)}`
       Translate.prototype[methodName] = Object.defineProperty(
         function (desc = false) {
           if (desc) {
-            return translate[attr]
+            return translate[attr].map(elem => {
+              if (elem?.restricted) {
+                return elem.restricted.has(this.#device.setting.DeviceType) ? elem : false
+              }
+              return elem
+            }).filter(Boolean) // Filter out false values
           }
-          return this[methodName](true).map(elem => elem.name)
+          return this[methodName](true).map(elem => {
+            if (elem?.restricted) {
+              return elem.restricted.has(this.#device.setting.DeviceType) ? elem.name : false
+            }
+            return elem.name
+          }).filter(Boolean) // Filter out false values
         },
         'name',
         { value: methodName }
@@ -127,6 +138,15 @@ export default class Translate {
   }
 
   /**
+   * Checks if the given trigger source corresponds to Artnet.
+   * @param {number|string} triggerSource - The trigger source value to check.
+   * @returns {boolean} - True if the protocol is Artnet, otherwise false.
+   */
+  #isTriggerSourceArtnet(triggerSource) {
+    return Number(triggerSource) === translate.rmTriggerSource.map(e => e.name).indexOf(word.ArtNet)
+  }
+
+  /**
    * Adjusts the universe value based on the protocol and device settings.
    * @param {Object} params - The parameters for adjusting the universe.
    * @param {number|string} params.value - The universe value to adjust.
@@ -153,6 +173,7 @@ export default class Translate {
   InputUniverse({ value, device, line }) { return this.ptUniverse({ value: value, device: device, line: line }) }
   ptMergeUniverse({ value, device, line }) { return this.ptUniverse({ value: value, device: device, line: line }) }
   ptResendUniverse({ value, device, line }) { return this.ptUniverse({ value: value, device: device, line: line }) }
+  rmSourceUniverse({ value, device, line }) { return this.ptUniverse({ value: value, device: device, line: line }) }
 
   /**
    * Determines if the protocol is Artnet based on the provided line object.
@@ -168,6 +189,8 @@ export default class Translate {
       return this.isProtocolArtnet(line.InputProtocol)
     } else if (line?.presetID !== undefined) {
       return this.isPresetArtnet(line)
+    } else if (line?.rmTriggerSource !== undefined) {
+      return this.#isTriggerSourceArtnet(line.rmTriggerSource)
     }
     return false
   }

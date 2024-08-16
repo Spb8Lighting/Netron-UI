@@ -67,6 +67,7 @@ export const word = {
   sACN: 'sACN',
   ArtNet: 'Art-Net',
   locked: '🛇', // Think to update other parameter below using the same icon
+  warning: '⚠',
   automatic: 'Automatic',
   timing: 'Timing',
   link: 'Next cue',
@@ -143,6 +144,14 @@ export const word = {
     cuesList: 'Cuelist',
     cuesList_Cuelist: 'Cuelist n°%1', // %1 = cuelist ID
     cuesList_Explanation: 'This page display virtual cuelist(s) based on your cues settings.\nIf the page is empty, it means that no cue link is set.',
+    inputs: 'Inputs',
+    inputs_Tab: 'Input %1', // %1 = input ID
+    inputs_PortSettings: 'Port settings',
+    inputs_Trigger: 'Trigger',
+    inputs_Port: 'Port %1', // %1 = port ID
+    inputs_PortModeWarning: 'Port %1 is not in input mode', // %1 = port ID
+    inputs_Type: 'Type',
+    inputs_Success: 'Input %1 updated successfully!', // %1 = input ID
     status: 'Status',
     status_Device: 'Device',
     status_IPAddress: 'IP address',
@@ -325,6 +334,46 @@ export const attr = {
     label: 'Current cue', icon: 'fa-play', attr: 'CurrentCueName',
     desc: 'It is the current running cue'
   },
+  rmActionEvent: {
+    label: 'Event type', icon: 'fa-cogs', attr: 'rmActionEvent',
+    desc: 'It is the remote input action'
+  },
+  rmActCueNum: {
+    label: 'Cue', icon: 'fa-clipboard-list', attr: 'rmActCueNum',
+    desc: 'It is the cue to be runned'
+  },
+  rmActCueMode: {
+    label: 'Cue mode', icon: 'fa-arrow-right-arrow-left', attr: 'rmActCueMode',
+    desc: 'It is the cue mode'
+  },
+  rmActPresetNum: {
+    label: 'Netron preset', icon: config.presets.icon, attr: 'rmActPresetNum',
+    desc: 'It is the netron preset to be runned'
+  },
+  rmActUserPresetNum: {
+    label: 'User preset', icon: config.presets.icon, attr: 'rmActUserPresetNum',
+    desc: 'It is the user preset to be runned'
+  },
+  rmActSendValue: {
+    label: 'Send value', icon: 'fa-paper-plane', attr: 'rmActSendValue',
+    desc: 'It is the value to be sent'
+  },
+  rmTriggerSource: {
+    label: 'Trigger source', icon: 'fa-route', attr: 'rmTriggerSource',
+    desc: 'It is the trigger source'
+  },
+  rmSourcePort: {
+    label: 'DMX port', icon: config.dmxPorts.icon, attr: 'rmSourcePort',
+    desc: 'It is the source port'
+  },
+  rmSourceAddress: {
+    label: 'DMX address', icon: 'fa-location-dot', attr: 'rmSourceaddress',
+    desc: 'It is the source address'
+  },
+  rmSourceUniverse: {
+    label: 'Universe', icon: 'fa-infinity', attr: 'rmSourceUniverse',
+    desc: 'It is the source universe'
+  },
   FirmwareVer: {
     label: 'Firmware', icon: 'fa-microchip', attr: 'FirmwareVer',
     desc: 'It is the firmware version'
@@ -394,6 +443,24 @@ export const translate = {
     { name: '30Hz', desc: 'TODO' },
     { name: '35Hz', desc: 'TODO' },
     { name: '40Hz', desc: 'TODO' }
+  ],
+  rmActionEvent: [
+    { name: 'Disable DMX', desc: 'Stops all DMX output for as long as contact is closed' },
+    { name: 'Cue', desc: 'Recall a specific cue number' },
+    { name: 'Netron preset', desc: 'Recalls this Netron preset when the contact is closed' },
+    { name: 'User preset', desc: 'Recalls this user preset when the contact is closed' },
+    { name: 'Send value', desc: 'Sends specific DMX value on all ports for as long as contact is closed' }
+  ],
+  rmTriggerSource: [
+    { name: 'Disable', desc: 'Input is disabled' },
+    { name: 'DMX port', desc: 'Use DMX port. Port mode must be set as input' },
+    { name: word.ArtNet, desc: `${word.ArtNet} trigger` },
+    { name: word.sACN, desc: `${word.sACN} trigger` },
+    { name: 'Contact', desc: 'The trigger source is a time event', restricted: new Set(['NETRON EN12', 'NETRON RDM10']) }
+  ],
+  rmActCueMode: [
+    { name: 'Trigger', desc: 'The cue is activated, and all times the links are processed even if the contact is opened again' },
+    { name: 'Toggle', desc: 'The cue is activated, and all times the links are processed only if the contact is closed.\nOnce toggle is opened, device will assume DMX traffic or No DMX status.\nThis allows to alternate between two cues for example with the toggle switch.' }
   ]
 }
 
@@ -443,7 +510,8 @@ export const apis = {
   saveInfo: 'save_info',
   runCues: 'run_cues',
   saveCues: 'save_cues',
-  editCues: 'edit_cues'
+  editCues: 'edit_cues',
+  saveInput: 'save_input'
 }
 
 /**

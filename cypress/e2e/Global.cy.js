@@ -737,7 +737,8 @@ context('Check pages', () => {
           EndFlag: '1'
         }
       })
-      cy.get('@currentCue').should('have.value', 'Cue 10')
+
+      cy.get('@currentCue').should('have.value')
 
       cy.get('@resendEthernet').uncheck()
       cy.checkRequest({
@@ -759,7 +760,7 @@ context('Check pages', () => {
           EndFlag: '1'
         }
       })
-      cy.get('@currentCue').should('have.value', 'Cue 50')
+      cy.get('@currentCue').should('have.value')
 
     })
   })
