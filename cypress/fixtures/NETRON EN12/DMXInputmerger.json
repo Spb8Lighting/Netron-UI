@@ -1,9 +1,1 @@
-{
-  "MergerMode": 3,
-  "MergerBackupTime": 6,
-  "MergerRestoreTime": 2,
-  "MergerFrameRate": 5,
-  "InputOffsetAddr": 1,
-  "InputRangeFrom": 1,
-  "InputRangeTo": 512
-}
+{"MergerMode":3,"MergerBackupTime":6,"MergerRestoreTime":2,"MergerFrameRate":5,"InputOffsetAddr":1,"InputRangeFrom":1,"InputRangeTo":512}

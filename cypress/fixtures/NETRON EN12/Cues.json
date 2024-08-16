@@ -1,695 +1,702 @@
 [
   {
-    "name": "Cue 1",
-    "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "name": "MyCue 1   +",
+    "fadeTime": 10,
+    "holdTime": 100,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 2",
-    "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "name": "MyCue 2",
+    "fadeTime": 20,
+    "holdTime": 200,
+    "linkCue": 2,
     "dmxdata": 255
   },
   {
-    "name": "Cue 3",
-    "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "name": "MyCue 3",
+    "fadeTime": 30,
+    "holdTime": 300,
+    "linkCue": 3,
     "dmxdata": 255
   },
   {
-    "name": "Scene 1.4",
-    "fadeTime": 5,
-    "holdTime": 10,
-    "linkCue": 0,
-    "dmxdata": 255
-  },
-  {
-    "name": "Scene 1.1",
-    "fadeTime": 5,
-    "holdTime": 10,
-    "linkCue": 6,
-    "dmxdata": 255
-  },
-  {
-    "name": "Scene 1.2",
-    "fadeTime": 5,
-    "holdTime": 10,
-    "linkCue": 7,
-    "dmxdata": 255
-  },
-  {
-    "name": "Scene 1.3",
-    "fadeTime": 5,
-    "holdTime": 20,
+    "name": "MyCue 4",
+    "fadeTime": 40,
+    "holdTime": 400,
     "linkCue": 4,
     "dmxdata": 255
   },
   {
-    "name": "Scene 2.1",
-    "fadeTime": 60,
-    "holdTime": 3600,
-    "linkCue": 9,
+    "name": "MyCue 5",
+    "fadeTime": 50,
+    "holdTime": 500,
+    "linkCue": 5,
     "dmxdata": 255
   },
   {
-    "name": "Scene 2.2",
-    "fadeTime": 30,
-    "holdTime": 250,
-    "linkCue": 10,
+    "name": "MyCue 6",
+    "fadeTime": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Scene 2.3",
+    "name": "MyCue 7",
     "fadeTime": 0,
-    "holdTime": 60,
-    "linkCue": 9,
+    "holdTime": 62,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 11",
+    "name": "MyCue 8",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 12",
+    "name": "MyCue 9",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 13",
+    "name": "MyCue 10",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 14",
+    "name": "MyCue 11",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 15",
+    "name": "MyCue 12",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 16",
+    "name": "MyCue 13",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 17",
+    "name": "MyCue 14",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 18",
+    "name": "MyCue 15",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 19",
+    "name": "MyCue 16",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 20",
+    "name": "MyCue 17",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 21",
+    "name": "MyCue 18",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 22",
+    "name": "MyCue 19",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 23",
+    "name": "MyCue 20",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 24",
+    "name": "MyCue 21",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 25",
+    "name": "MyCue 22",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 26",
+    "name": "MyCue 23",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 27",
+    "name": "MyCue 24",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 28",
+    "name": "MyCue 25",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 29",
+    "name": "MyCue 26",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 30",
+    "name": "MyCue 27",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 31",
+    "name": "MyCue 28",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 32",
+    "name": "MyCue 29",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 33",
+    "name": "MyCue 30",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 34",
+    "name": "MyCue 31",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 35",
+    "name": "MyCue 32",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 36",
+    "name": "MyCue 33",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 37",
+    "name": "MyCue 34",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 38",
+    "name": "MyCue 35",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 39",
+    "name": "MyCue 36",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 40",
+    "name": "MyCue 37",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 41",
+    "name": "MyCue 38",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 42",
+    "name": "MyCue 39",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 43",
+    "name": "MyCue 40",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 44",
+    "name": "MyCue 41",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 45",
+    "name": "MyCue 42",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 46",
+    "name": "MyCue 43",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 47",
+    "name": "MyCue 44",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 48",
+    "name": "MyCue 45",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 49",
+    "name": "MyCue 46",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 50",
+    "name": "MyCue 47",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 51",
+    "name": "MyCue 48",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 52",
+    "name": "MyCue 49",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 53",
+    "name": "MyCue 50",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 54",
+    "name": "MyCue 51",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 55",
+    "name": "MyCue 52",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 56",
+    "name": "MyCue 53",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 57",
+    "name": "MyCue 54",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 58",
+    "name": "MyCue 55",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 59",
+    "name": "MyCue 56",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 60",
+    "name": "MyCue 57",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 61",
+    "name": "MyCue 58",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 62",
+    "name": "MyCue 59",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 63",
+    "name": "MyCue 60",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 64",
+    "name": "MyCue 61",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 65",
+    "name": "MyCue 62",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 66",
+    "name": "MyCue 63",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 67",
+    "name": "MyCue 64",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 68",
+    "name": "MyCue 65",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 69",
+    "name": "MyCue 66",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 70",
+    "name": "MyCue 67",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 71",
+    "name": "MyCue 68",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 72",
+    "name": "MyCue 69",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 73",
+    "name": "MyCue 70",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 74",
+    "name": "MyCue 71",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 75",
+    "name": "MyCue 72",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 76",
+    "name": "MyCue 73",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 77",
+    "name": "MyCue 74",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 78",
+    "name": "MyCue 75",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 79",
+    "name": "MyCue 76",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 80",
+    "name": "MyCue 77",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 81",
+    "name": "MyCue 78",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 82",
+    "name": "MyCue 79",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 83",
+    "name": "MyCue 80",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 84",
+    "name": "MyCue 81",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 85",
+    "name": "MyCue 82",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 86",
+    "name": "MyCue 83",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 87",
+    "name": "MyCue 84",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 88",
+    "name": "MyCue 85",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 89",
+    "name": "MyCue 86",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 90",
+    "name": "MyCue 87",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 91",
+    "name": "MyCue 88",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 92",
+    "name": "MyCue 89",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 93",
+    "name": "MyCue 90",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 94",
+    "name": "MyCue 91",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 95",
+    "name": "MyCue 92",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 96",
+    "name": "MyCue 93",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 97",
+    "name": "MyCue 94",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 98",
+    "name": "MyCue 95",
     "fadeTime": 0,
-    "holdTime": 1,
-    "linkCue": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
+    "dmxdata": 255
+  },
+  {
+    "name": "MyCue 96",
+    "fadeTime": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
+    "dmxdata": 255
+  },
+  {
+    "name": "MyCue 97",
+    "fadeTime": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   },
   {
-    "name": "Cue 99",
+    "name": "MyCue 98",
     "fadeTime": 0,
-    "holdTime": 1,
+    "holdTime": 1000,
     "linkCue": 0,
+    "dmxdata": 255
+  },
+  {
+    "name": "MyCue 99",
+    "fadeTime": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
+    "dmxdata": 255
+  },
+  {
+    "name": "MyCue 100",
+    "fadeTime": 0,
+    "holdTime": 1000,
+    "linkCue": 1,
     "dmxdata": 255
   }
 ]

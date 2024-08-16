@@ -1,72 +1,37 @@
 [
   {
-    "name": "ArtNet 2.x    ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "ArtNet 10.x   ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "ArtNet 192.x  ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "ArtNet 172.x  ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "Artnet DHCP   ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "ArtNet In     ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "ArtNet In/Thru",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "sACN 2.x      ",
-    "universe": 0,
-    "hidden": 0
-  },
-  {
-    "name": "sACN 10.x     ",
+    "name": "Art-Net 2.x.x.x ",
     "universe": 1,
     "hidden": 0
   },
   {
-    "name": "sACN 192.x    ",
-    "universe": 1,
+    "name": "Art-Net 10.x.x.x",
+    "universe": 2,
     "hidden": 0
   },
   {
-    "name": "sACN 172.x    ",
-    "universe": 1,
+    "name": "sACN DHCP       ",
+    "universe": 3,
     "hidden": 0
   },
   {
-    "name": "sACN DHCP     ",
-    "universe": 1,
+    "name": "Art-Net In      ",
+    "universe": 4,
     "hidden": 0
   },
   {
-    "name": "sACN DHCP In  ",
-    "universe": 1,
+    "name": "sACN DHCP In    ",
+    "universe": 3,
     "hidden": 0
   },
   {
-    "name": "Splitter Port1",
-    "universe": 1,
+    "name": "Art-Net In/Thru ",
+    "universe": 5,
+    "hidden": 0
+  },
+  {
+    "name": "Splitter Port 1 ",
+    "universe": 6,
     "hidden": 1
   }
 ]

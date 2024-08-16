@@ -1,5 +1,5 @@
 {
-  "addressmode": 1,
-  "ipaddress": "002.143.056.006",
-  "netmask": "255.000.000.000"
+  "addressmode": 3,
+  "ipaddress": "002.000.000.001",
+  "netmask": "255.255.255.000"
 }

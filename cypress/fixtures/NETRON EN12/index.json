@@ -1,8 +1,8 @@
 {
-  "BootVer": "V1.4",
-  "FirmwareVer": "V2.9.4",
-  "WebVer": "V2.9.4",
-  "MACAddress": "42:4C:93:45:38:06",
-  "RDMUID": "0x22A6-DDA84909",
-  "OnTime": "1536h"
+  "FirmwareVer": "V1.2",
+  "BootVer": "V1.1",
+  "WebVer": "V1.2",
+  "MACAddress": "11:22:33:44:55:66",
+  "RDMUID": "0x22A6-DD123456",
+  "OnTime": "0(H)"
 }
