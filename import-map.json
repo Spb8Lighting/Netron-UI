@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "config": "./assets/js/config.js",
+    "DarkTheme": "./assets/js/class.DarkTheme.js",
+    "Menu": "./assets/js/class.Menu.js",
+    "Page": "./assets/js/class.Page.js",
+    "Translate": "./assets/js/class.Translate.js",
+    "Device": "./assets/js/class.Device.js",
+    "FetchJSON": "./assets/js/class.FetchJSON.js",
+    "simple-keyboard": "./vendors/simple-keyboard/js/index.modern.esm.js",
+    "MobileKeyboard": "./assets/js/class.MobileKeyboard.js"
+  }
+}
