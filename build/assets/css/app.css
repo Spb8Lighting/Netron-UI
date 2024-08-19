@@ -116,11 +116,13 @@ body>div,
   --bs-table-color: white;
   --bs-table-border-color: white;
   --bs-table-bg: black;
+  table-layout: fixed;
+  width: 140px;
 }
 
 .netron-table th,
 .netron-table td {
-  width: calc(150px / 4);
+  width: calc(140px / 4);
 }
 
 .netron-table .text-red {
@@ -351,7 +353,7 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
 #pageContent .nav-link {
   font-size: 1rem;
   padding: 0.5rem;
-  width:100%
+  width: 100%
 }
 
 #pageContent .break {
@@ -393,13 +395,10 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
   transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px),
+screen and (max-height: 550px) {
   body:before {
     content: 'sm'
-  }
-
-  a:has(#logo) {
-    width: calc(100% - 3.5em) !important;
   }
 
   html:not(.compact) #menuToggle {
@@ -407,8 +406,9 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
   }
 
   #main-menu {
-    width: 100% !important;
     overflow-y: auto;
+    position: absolute !important;
+    z-index: 10;
   }
 
   .compact #main-menu,
@@ -426,13 +426,9 @@ html:not(.compact) #main-menu li:has(ul)>a::after {
     font-size: .8rem !important;
   }
 
-  html:not(.compact) #themeSwitcher {
+  html:not(.compact) #themeSwitcher,
+  html:not(.compact) #pageTitle {
     display: none !important;
-  }
-
-  html:not(.compact) #pageContent {
-    transform: translateX(100%);
-    transition: transform .35s ease;
   }
 
   #pageContent .nav-link {

@@ -155,7 +155,7 @@ export default class Translate {
    * @returns {number} - The adjusted universe value.
    */
   ptUniverse({ value, device, line }) {
-    if (line?.ptMode !== undefined && !this.ptMode({ value: line.ptMode, universe: true })) {
+    if (line?.ptMode !== undefined && line.ptMode === 0) {
       return this.#empty
     }
     if (line?.InputSource !== undefined && !this.InputSource({ value: line.InputSource, InputUniverse: true })) {
@@ -226,7 +226,10 @@ export default class Translate {
    */
   #getRealValue(index, array) {
     const value = array[index]
-    return value !== undefined ? value : index
+    if(value === undefined) {
+      return index
+    }
+    return value
   }
 
   /**
@@ -247,10 +250,13 @@ export default class Translate {
    * @param {boolean} [params.desc] - Optional description flag.
    * @returns {*} - The merge mode value.
    */
-  ptMergeMode({ value, desc }) {
+  ptMergeMode({ value, desc, line }) {
+    if (line?.ptMode !== undefined && line.ptMode !== 2) { // Only output can have merge mode
+      return this.#empty
+    }
     return this.#getRealValue(value, this.getPtMergeMode(desc))
   }
-  MergerMode({ value, desc }) { return this.ptMergeMode({ value: value, desc: desc }) }
+  MergerMode({ value, desc, line }) { return this.ptMergeMode({ value: value, desc: desc, line: line }) }
 
   /**
    * Gets the source value based on value and description.
@@ -272,7 +278,7 @@ export default class Translate {
    * @returns {*} - The RDM value.
    */
   ptRDM({ value, line, desc }) {
-    if (line?.ptMode !== undefined && !this.ptMode({ value: line.ptMode, rdm: true })) {
+    if (line?.ptMode !== undefined && line.ptMode !== 2) { // Only output can have RDM
       return this.#empty
     }
     if (line?.InputSource !== undefined && !this.InputSource({ value: line.InputSource, rdm: true })) {
@@ -290,7 +296,7 @@ export default class Translate {
    * @returns {*} - The protocol value.
    */
   ptProtocol({ value, line }) {
-    if (line?.ptMode !== undefined && !this.ptMode({ value: line.ptMode, protocol: true })) {
+    if (line?.ptMode !== undefined && line.ptMode === 0) {
       return this.#empty
     }
     if (line?.InputSource !== undefined && !this.InputSource({ value: line.InputSource, inputProtocol: true })) {
@@ -311,7 +317,7 @@ export default class Translate {
    * @returns {*} - The frame rate value.
    */
   ptFramerate({ value, line, desc }) {
-    if (line?.ptMode !== undefined && !this.ptMode({ value: line.ptMode, framerate: true })) {
+    if (line?.ptMode !== undefined && (line.ptMode === 0 || line.ptMode === 3)) { // Only output can have frame rate
       return this.#empty
     }
     return this.#getRealValue(value, this.getPtFramerate(desc))
@@ -431,17 +437,10 @@ export default class Translate {
    * @param {Object} params - The parameters for getting the ptMode value.
    * @param {number|string} params.value - The value to use for lookup.
    * @param {boolean} [params.desc] - Optional description flag.
-   * @param {boolean} [params.universe] - Optional flag for universe.
-   * @param {boolean} [params.rdm] - Optional flag for RDM.
-   * @param {boolean} [params.protocol] - Optional flag for protocol.
-   * @param {boolean} [params.framerate] - Optional flag for frame rate.
    * @returns {*} - The ptMode value.
    */
-  ptMode({ value, desc, universe, rdm, protocol, framerate }) {
+  ptMode({ value, desc }) {
     const ptModeDesc = this.getPtMode(desc)
-    if (universe || rdm || protocol || framerate) {
-      return this.#getRealValue(value, ptModeDesc)
-    }
     return this.#getRealValue(value, ptModeDesc)
   }
 

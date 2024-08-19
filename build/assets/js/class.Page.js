@@ -285,6 +285,7 @@ export default class Page {
                     break
                   default:
                     td.innerHTML = this.getAttribute({ line: reuseLine, attr: head.attr })
+                    td.className = 'text-muted fst-italic fw-light'
                     break
                 }
               } else {
@@ -1299,10 +1300,6 @@ export default class Page {
         defaultValue: (port.ptRDM === 1)
       })
 
-      /** Input/Output */
-      const InputOuputTitle = this.getBlockTitle(word.page.dmxPorts_InOut)
-      InputOuputTitle.classList.add('mt-2')
-
       const ptProtocol = this.getInput({
         attr: attr.ptProtocol,
         id: `${form.form.id}ptProtocol`,
@@ -1411,8 +1408,8 @@ export default class Page {
       const button = this.getSubmit('Save')
 
       const allInputs = [
-        PortSettingsTitle, ptClonePort, ptMode, ptRDM,
-        InputOuputTitle, ptProtocol, ptUniverse,
+        ptMode,
+        PortSettingsTitle, ptClonePort, ptRDM, ptProtocol, ptUniverse,
         MergeTitle, ptMergeMode, ptMergeUniverse, ptResendProtocol, ptResendUniverse,
         DMXRangeTitle, ptSendValue, ptFramerate, ptRangeFrom, ptRangeTo, ptOffsetAddr
       ]
@@ -1576,15 +1573,14 @@ export default class Page {
           case 0: // Disable
             this.#disabledElem({
               elem: [
-                PortSettingsTitle, ptMode
+                ptMode
               ]
             })
             break
           case 1: // Input
             this.#disabledElem({
               elem: [
-                PortSettingsTitle, ptMode, ptUniverse,
-                InputOuputTitle, ptProtocol,
+                PortSettingsTitle, ptMode, ptUniverse, ptProtocol,
                 DMXRangeTitle, ptRangeFrom, ptRangeTo, ptOffsetAddr
               ]
             })
@@ -1593,16 +1589,17 @@ export default class Page {
             if (Number(ptClonePort.children[1].value) !== i) { // Port is cloning another port
               this.#disabledElem({
                 elem: [
+                  ptMode,
                   PortSettingsTitle, ptClonePort
                 ]
               })
             } else {
               this.#disabledElem({
                 elem: [
-                  PortSettingsTitle, ptClonePort, ptMode, ptUniverse,
-                  InputOuputTitle, ptProtocol, ptFramerate, ptRDM,
+                  ptMode,
+                  PortSettingsTitle, ptClonePort, ptUniverse, ptProtocol, ptRDM,
                   MergeTitle, ptMergeMode,
-                  DMXRangeTitle, ptRangeFrom, ptRangeTo, ptOffsetAddr
+                  DMXRangeTitle, ptFramerate, ptRangeFrom, ptRangeTo, ptOffsetAddr
                 ]
               })
               if (Number(ptMergeMode.children[1].value) !== 0) { // !Off
@@ -1616,7 +1613,7 @@ export default class Page {
           case 3: // Send value
             this.#disabledElem({
               elem: [
-                PortSettingsTitle, ptMode,
+                ptMode,
                 DMXRangeTitle, ptSendValue, ptFramerate, ptRangeFrom, ptRangeTo, ptOffsetAddr
               ]
             })
