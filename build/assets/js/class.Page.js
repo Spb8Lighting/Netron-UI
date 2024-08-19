@@ -1422,6 +1422,7 @@ export default class Page {
       const defaultValues = () => {
         ptRDM.children[1].firstChild.checked = true
         ptProtocol.children[1].value = 0
+        ptClonePort.children[1].value = i
         ptUniverse.children[1].value = i + 1
         ptMergeUniverse.children[1].value = i + 1 + this.#device.dmxPorts.length
         ptResendUniverse.children[1].value = i + 1 + this.#device.dmxPorts.length * 2
@@ -2324,6 +2325,26 @@ export default class Page {
       form.fieldset.append(...allInputs, button)
 
       /**
+       * Sets default values for various inputs
+       */
+      const defaultValues = e => {
+        switch (e.target.name) {
+          case 'rmActionEvent':
+            rmActUserPresetNum.children[1].value = 0
+            rmActPresetNum.children[1].value = 0
+            rmActCueMode.children[1].value = 0
+            rmActCueNum.children[1].value = 0
+            rmActSendValue.children[1].value = 0
+            break
+          case 'rmTriggerSource':
+            rmSourcePort.children[1].value = 0
+            rmSourceAddress.children[1].value = 1
+            rmSourceUniverse.children[1].value = 1
+            break
+        }
+      }
+
+      /**
       * Updates the visibility and values of elements based on selected options.
       */
       const updateVisibility = () => {
@@ -2360,7 +2381,17 @@ export default class Page {
 
       updateVisibility()
 
-      form.form.addEventListener('change', updateVisibility)
+      form.form.addEventListener('change', e => {
+        switch (e.target.name) {
+          case 'rmTriggerSource':
+          case 'rmActionEvent':
+            defaultValues(e)
+            updateVisibility()
+            break
+          default:
+            break
+        }
+      })
 
       /**
        * Handles the form submission callback
